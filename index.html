@@ -374,7 +374,11 @@
       <main id="admin-tab-list" class="p-6 flex-grow space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-sans">Arsip Berita Aktif</h3>
-          <div class="flex items-center space-x-3">
+          <div class="flex items-center space-x-3 flex-wrap gap-2">
+            <!-- TRIGGER AUTO SCRAPER AI -->
+            <button onclick="runAutoScraper()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-2 shadow-md transition font-sans">
+              <i class="fas fa-robot"></i><span>Auto-Scraping AI</span>
+            </button>
             <button onclick="triggerPrintReport()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-2 shadow-md transition font-sans">
               <i class="fas fa-print"></i><span>Cetak Laporan PDF</span>
             </button>
@@ -427,15 +431,21 @@
 
           <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end font-sans">
             <div class="md:col-span-8">
-              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase">URL Gambar Utama (Atau Upload Gambar)</label>
+              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase">URL Gambar Utama</label>
               <input type="url" id="article-image" required placeholder="https://images.unsplash.com/photo-..." class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg px-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
             </div>
-            <div class="md:col-span-4">
+            <div class="md:col-span-4 flex space-x-2">
               <!-- Image Compressor & Uploader File Input -->
               <input type="file" id="local-image-uploader" accept="image/*" class="hidden" onchange="compressLocalImage(this)">
-              <button type="button" onclick="document.getElementById('local-image-uploader').click()" class="w-full text-xs font-bold bg-slate-200 dark:bg-slate-800 hover:bg-red-600 hover:text-white text-slate-700 dark:text-slate-300 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 transition flex items-center justify-center space-x-2">
+              <button type="button" onclick="document.getElementById('local-image-uploader').click()" class="flex-1 text-[10px] font-bold bg-slate-200 dark:bg-slate-800 hover:bg-red-600 hover:text-white text-slate-700 dark:text-slate-300 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 transition flex items-center justify-center space-x-1">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <span>Upload Gambar</span>
+                <span>Upload</span>
+              </button>
+              
+              <!-- FITUR AI 2: GENERATOR GAMBAR AI -->
+              <button type="button" onclick="generateAIImage()" class="flex-1 text-[10px] font-bold bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg transition flex items-center justify-center space-x-1">
+                <i class="fas fa-palette animate-pulse"></i>
+                <span>AI Gambar</span>
               </button>
             </div>
           </div>
@@ -447,7 +457,22 @@
 
           <div>
             <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase font-sans">Isi Konten Berita</label>
-            <div id="editor-container" class="bg-white dark:bg-slate-800 dark:text-white min-h-[220px] rounded-lg"></div>
+            
+            <!-- FITUR AI 1: PANEL ASISTEN CO-WRITING -->
+            <div class="bg-slate-100 dark:bg-slate-800 p-2.5 rounded-t-lg border-x border-t border-slate-300 dark:border-slate-700 flex flex-wrap gap-2 items-center text-xs font-sans">
+              <span class="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[9px] mr-2 flex items-center"><i class="fas fa-robot mr-1 text-red-600"></i>Asisten AI:</span>
+              <button type="button" onclick="panggilAsistenAI()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-md flex items-center space-x-1 transition text-[10px]">
+                <i class="fas fa-magic"></i> <span>Tulis Otomatis</span>
+              </button>
+              <button type="button" onclick="ubahToneAI()" class="bg-[#0f2a68] hover:bg-blue-800 text-white font-bold px-3 py-1.5 rounded-md flex items-center space-x-1 transition text-[10px]">
+                <i class="fas fa-sliders-h"></i> <span>Ubah Nada (Tone)</span>
+              </button>
+              <button type="button" onclick="perbaikiTypoAI()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-md flex items-center space-x-1 transition text-[10px]">
+                <i class="fas fa-spellcheck"></i> <span>Perbaiki Typo</span>
+              </button>
+            </div>
+
+            <div id="editor-container" class="bg-white dark:bg-slate-800 dark:text-white min-h-[220px] rounded-b-lg"></div>
           </div>
 
           <div class="flex justify-end space-x-3 pt-5 border-t border-slate-200 dark:border-slate-800 font-sans">
@@ -508,7 +533,7 @@
   <!-- ==================== LOGIKA WEB APPLICATION ==================== -->
   <script>
     // ATURAN MANDATORI: GAS_URL URL Jembatan App Script
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbz19r_2Xd9BXaP8GmkaotXcf6NqjpILjoG_l-5mi9R9gRRPdlZFOisP-By5ukXK2JIR/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyiCCTew_ykRd6OUznfOIWffa1dBWaxcMoonZl1yfa3qim4zWq_xULxxqSBkqHPP83V/exec";
 
     // REST API Endpoint URL Firebase Realtime Database
     const FIREBASE_DB_URL = "https://berita-artikel-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -694,7 +719,7 @@
       if (isPlaceholderDB) {
         isOfflineMode = true;
         document.getElementById('offline-banner').classList.add('hidden');
-        document.getElementById('cloud-status-text').innerText = "Mode Pratinjau Aktif";
+        document.getElementById('cloud-status-text').innerText = "Mode Pratinjau (Lokal)";
         loadFallbackSettings();
         return;
       }
@@ -740,10 +765,10 @@
       const container = document.getElementById('dynamic-category-nav');
       if (!container) return;
       
-      let html = `<button onclick="filterByCategory('Semua')" class="category-btn ${selectedCategory === 'Semua' ? 'border-b-2 border-white text-white' : 'text-white/70 hover:text-white'} pb-1 tracking-wider">TERBARU</button>`;
+      let html = `<button onclick="filterByCategory('Semua')" class="category-btn ${selectedCategory === 'Semua' ? 'border-b-2 border-white text-white' : 'text-white/70 hover:text-white'} pb-1 tracking-wider font-sans">TERBARU</button>`;
       
       categories.forEach(cat => {
-        html += `<button onclick="filterByCategory('${cat}')" class="category-btn ${selectedCategory === cat ? 'border-b-2 border-white text-white' : 'text-white/70 hover:text-white'} pb-1 tracking-wider uppercase">${cat}</button>`;
+        html += `<button onclick="filterByCategory('${cat}')" class="category-btn ${selectedCategory === cat ? 'border-b-2 border-white text-white' : 'text-white/70 hover:text-white'} pb-1 tracking-wider uppercase font-sans">${cat}</button>`;
       });
       
       container.innerHTML = html;
@@ -1089,7 +1114,7 @@
             
             <!-- Social Share Bar & Bookmark -->
             <div class="flex items-center space-x-4">
-              <span class="font-bold uppercase text-[10px] text-slate-400">Bagikan:</span>
+              <span class="font-bold uppercase text-[10px] text-slate-400 font-sans">Bagikan:</span>
               <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(art.title + ' - ' + articleUrl)}" target="_blank" class="text-emerald-500 hover:text-emerald-600 text-sm" title="Bagikan ke WhatsApp"><i class="fab fa-whatsapp"></i></a>
               <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}" target="_blank" class="text-blue-600 hover:text-blue-700 text-sm" title="Bagikan ke Facebook"><i class="fab fa-facebook"></i></a>
               <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(art.title)}&url=${encodeURIComponent(articleUrl)}" target="_blank" class="text-sky-400 hover:text-sky-500 text-sm" title="Bagikan ke X"><i class="fab fa-twitter"></i></a>
@@ -1638,7 +1663,7 @@
         let method = 'POST';
         if (id) {
           url = `${dbUrl}articles/${id}.json`;
-          method = 'PATCH'; // Gunakan PATCH untuk pembaruan data
+          method = 'PATCH';
         }
 
         const response = await fetch(url, {
@@ -1777,6 +1802,193 @@
         overlay.remove();
         document.getElementById('admin-view').classList.remove('hidden');
       }, 500);
+    }
+
+    // ===================================================================
+    // INTEGRASI IMPLEMENTASI 3 FITUR KECERDASAN BUATAN (AI FEATURES)
+    // ===================================================================
+
+    // FITUR AI 1A: AI News Co-Writer (Menulis Otomatis)
+    async function panggilAsistenAI() {
+      const { value: promptMentah } = await Swal.fire({
+        title: 'Asisten Penulisan AI',
+        input: 'textarea',
+        inputLabel: 'Masukkan ide berita atau poin-poin garis besar singkat Anda:',
+        inputPlaceholder: 'Tulis draf kasar di sini (Cth: BI menaikkan suku bunga 25 bps untuk mengamankan nilai rupiah dari inflasi...)',
+        inputAttributes: { 'aria-label': 'Poin berita singkat' },
+        showCancelButton: true,
+        confirmButtonColor: '#E11D48',
+        cancelButtonColor: '#475569',
+        confirmButtonText: 'Tulis Berita Utama'
+      });
+
+      if (!promptMentah) return;
+      
+      Swal.fire({
+        title: 'AI Sedang Menulis Berita...',
+        text: 'Mohon tunggu, kecerdasan buatan sedang menyusun teks terbaik berformat HTML untuk editor Anda.',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+      
+      try {
+        const response = await fetch(`${GAS_URL}?action=panggilAI&prompt=${encodeURIComponent(promptMentah)}`, {
+          method: 'POST'
+        });
+        const res = await response.json();
+        
+        if (res.status === 'success') {
+          quill.root.innerHTML = res.data;
+          Swal.fire('Selesai!', 'Draf berita berhasil dibuat oleh AI.', 'success');
+        } else {
+          throw new Error(res.message);
+        }
+      } catch (err) {
+        Swal.fire('Gagal!', 'Asisten AI gagal merespons. Pastikan GEMINI_API_KEY Anda sudah terkonfigurasi di Google Apps Script: ' + err.message, 'error');
+      }
+    }
+
+    // FITUR AI 1B: Ubah Nada Bicara (Tone Changer)
+    async function ubahToneAI() {
+      const teksSaatIni = quill.root.innerHTML;
+      if (!teksSaatIni || teksSaatIni === '<p><br></p>') {
+        showToast('Tulis atau generates teks berita terlebih dahulu!', 'error');
+        return;
+      }
+
+      const { value: pilihanTone } = await Swal.fire({
+        title: 'Ubah Nada Bicara AI',
+        input: 'select',
+        inputOptions: {
+          'Formal': 'Formal (Berwibawa & Profesional)',
+          'Santai': 'Santai (Ramah & Gaya Anak Muda)',
+          'Sensasional': 'Sensasional (Bombastis & Klik-umpan)'
+        },
+        inputPlaceholder: 'Pilih Nada Bicara Baru',
+        showCancelButton: true,
+        confirmButtonColor: '#0f2a68',
+        confirmButtonText: 'Proses Perubahan'
+      });
+
+      if (!pilihanTone) return;
+
+      Swal.fire({
+        title: 'Mereset Gaya Bahasa...',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      try {
+        const response = await fetch(`${GAS_URL}?action=ubahToneAI&tone=${pilihanTone}`, {
+          method: 'POST',
+          body: JSON.stringify({ text: teksSaatIni })
+        });
+        const res = await response.json();
+        if (res.status === 'success') {
+          quill.root.innerHTML = res.data;
+          Swal.fire('Sukses!', `Berita telah diubah ke nada gaya ${pilihanTone}.`, 'success');
+        } else {
+          throw new Error(res.message);
+        }
+      } catch (err) {
+        Swal.fire('Gagal!', 'Gagal mengubah nada bicara berita: ' + err.message, 'error');
+      }
+    }
+
+    // FITUR AI 1C: Auto-Koreksi Ejaan & Typo
+    async function perbaikiTypoAI() {
+      const teksSaatIni = quill.root.innerHTML;
+      if (!teksSaatIni || teksSaatIni === '<p><br></p>') {
+        showToast('Isi konten berita terlebih dahulu!', 'error');
+        return;
+      }
+
+      Swal.fire({
+        title: 'Memeriksa Ejaan KBBI...',
+        text: 'AI sedang menganalisis & memperbaiki kesalahan ejaan secara otomatis.',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      try {
+        const response = await fetch(`${GAS_URL}?action=perbaikiTypoAI`, {
+          method: 'POST',
+          body: JSON.stringify({ text: teksSaatIni })
+        });
+        const res = await response.json();
+        if (res.status === 'success') {
+          quill.root.innerHTML = res.data;
+          Swal.fire('Ejaan Diperbaiki!', 'Typo bahasa Indonesia berhasil dibersihkan otomatis sesuai KBBI.', 'success');
+        } else {
+          throw new Error(res.message);
+        }
+      } catch (err) {
+        Swal.fire('Gagal!', 'Auto-koreksi gagal: ' + err.message, 'error');
+      }
+    }
+
+    // FITUR AI 2: Generasi Gambar Ilustrasi Bebas Hak Cipta
+    function generateAIImage() {
+      const title = document.getElementById('article-title').value.trim();
+      if (!title) {
+        Swal.fire('Judul Masih Kosong!', 'Masukkan judul berita terlebih dahulu sebagai kata kunci perintah (prompt) gambar!', 'warning');
+        return;
+      }
+
+      Swal.fire({
+        title: 'Menyusun Gambar Kreatif...',
+        text: 'Mengolah deskripsi judul berita menjadi ilustrasi digital bebas hak cipta.',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      // Menggunakan API gratis dari Pollinations.ai (Sangat Cepat & Stabil)
+      const encodedPrompt = encodeURIComponent(`cinematic editorial journalism photo about ${title}, realistic photography, ultrahd, detailed 4k`);
+      const seed = Math.floor(Math.random() * 100000);
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=800&height=500&nologo=true&seed=${seed}`;
+
+      // Set langsung ke kolom input URL gambar
+      document.getElementById('article-image').value = imageUrl;
+
+      setTimeout(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Gambar AI Terbuat!',
+          html: `<p class="text-xs mb-3">Tautan gambar berhasil dipasang otomatis pada kolom input.</p><img src="${imageUrl}" class="w-full rounded-lg shadow border" style="max-height: 180px; object-fit: cover;">`,
+          confirmButtonColor: '#E11D48'
+        });
+      }, 1500);
+    }
+
+    // FITUR AI 3: Auto-Drafting Web Scraper (AI RSS Reader & Rewrite)
+    async function runAutoScraper() {
+      Swal.fire({
+        title: 'Menjalankan AI Scraper...',
+        text: 'Sistem sedang membaca RSS media nasional, memilih tajuk utama teknologi terpopuler, dan menulis ulang berita agar unik secara otomatis.',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      try {
+        const response = await fetch(`${GAS_URL}?action=runScraper`, {
+          method: 'POST'
+        });
+        const res = await response.json();
+        if (res.status === 'success') {
+          Swal.fire({
+            icon: 'success',
+            title: 'Auto-Draft AI Berhasil!',
+            html: `<div class="text-left text-xs space-y-1.5"><p><b>Draf Baru Berhasil Dibuat:</b></p><p class="text-red-600 font-bold">${res.data.title}</p><p class="text-slate-400">Silakan buka atau segarkan arsip tabel berita Anda untuk melihat & merilis draf ini.</p></div>`,
+            confirmButtonColor: '#0f2a68'
+          }).then(() => {
+            fetchArticles();
+          });
+        } else {
+          throw new Error(res.message);
+        }
+      } catch (err) {
+        Swal.fire('Scraper Gagal!', 'Gagal menarik berita RSS otomatis: ' + err.message, 'error');
+      }
     }
   </script>
 </body>
