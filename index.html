@@ -11,12 +11,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlBvcnRhbCBCZXJpdGEgTW9kZXJuIiwKICAic2hvcnRfbmFtZSI6ICJCZXJpdGFOZXdzIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3UkEiLAogICJ0aGVtZV9jb2xvciI6ICIjMEYxNzJBIgp9">
 
-  <!-- Premium News Editorial Fonts (Roboto for Headings & Open Sans for UI/Body) -->
+  <!-- Google Fonts: Lora (Premium Serif) & Inter (Premium Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;850;900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS & FontAwesome -->
+  <!-- Tailwind CSS & FontAwesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -35,12 +35,13 @@
       theme: {
         extend: {
           fontFamily: {
-            serif: ['Roboto', 'sans-serif'],
-            sans: ['Open Sans', 'sans-serif'],
+            serif: ['Lora', 'serif'],
+            sans: ['Inter', 'sans-serif'],
           },
           colors: {
             navy: {
               50: '#f8fafc',
+              800: '#1e293b',
               900: '#0F172A',
               950: '#0B0F19'
             },
@@ -48,6 +49,10 @@
               DEFAULT: '#E11D48',
               hover: '#BE123C',
             }
+          },
+          boxShadow: {
+            'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02)',
+            'premium-hover': '0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 1px 10px rgba(15, 23, 42, 0.03)'
           }
         }
       }
@@ -55,10 +60,10 @@
   </script>
   <style>
     body {
-      font-family: 'Open Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
     }
     h1, h2, h3, .news-title {
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Lora', serif;
     }
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -87,10 +92,10 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 antialiased">
+<body class="bg-slate-50/60 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 antialiased">
 
   <!-- Offline Fallback Notice Banner -->
-  <div id="offline-banner" class="hidden bg-amber-500 text-slate-950 px-4 py-2.5 text-center text-sm font-semibold flex items-center justify-center space-x-2 transition-all duration-300 no-print">
+  <div id="offline-banner" class="hidden bg-amber-500 text-slate-950 px-4 py-2.5 text-center text-xs font-semibold flex items-center justify-center space-x-2 transition-all duration-300 no-print">
     <i class="fas fa-wifi-slash animate-bounce"></i>
     <span>Mode Demo Aktif: Menggunakan database internal memori browser Anda karena server cloud luring.</span>
   </div>
@@ -98,15 +103,15 @@
   <!-- ==================== FRONT-END VIEW ==================== -->
   <div id="front-end-view" class="min-h-screen flex flex-col">
     
-    <!-- Top Header -->
-    <header class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm sticky top-0 z-40 no-print border-b border-slate-100 dark:border-slate-800">
+    <!-- Top Header (Glassmorphism backdrop) -->
+    <header class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-slate-900 dark:text-white sticky top-0 z-40 no-print border-b border-slate-100 dark:border-slate-800 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
         <!-- Hamburger & Logo -->
         <div class="flex items-center space-x-4">
-          <button id="btn-menu" class="text-2xl focus:outline-none hover:text-red-600 transition" onclick="toggleCategoryDrawer()"><i class="fas fa-bars"></i></button>
+          <button id="btn-menu" class="text-2xl focus:outline-none hover:text-red-600 transition" onclick="toggleCategoryDrawer()"><i class="fas fa-bars-staggered"></i></button>
           <span class="text-2xl font-black tracking-tighter flex items-center cursor-pointer" onclick="filterByCategory('Semua')">
             SARJANA
-            <span class="bg-red-600 text-white text-[11px] px-2 py-0.5 rounded font-black ml-1.5 uppercase tracking-wide">NEWS</span>
+            <span class="bg-red-600 text-white text-[11px] px-2.5 py-0.5 rounded-md font-black ml-1.5 uppercase tracking-wide shadow-sm shadow-red-600/30">NEWS</span>
             <span class="text-[11px] text-blue-600 font-bold ml-0.5">.com</span>
           </span>
         </div>
@@ -119,7 +124,7 @@
           
           <div class="relative cursor-pointer hover:text-red-600 transition" onclick="showNotificationPanel()">
             <i class="far fa-bell text-xl"></i>
-            <span class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">7</span>
+            <span class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-extrabold w-4,5 h-4,5 px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">7</span>
           </div>
           
           <button onclick="toggleSearchBar()" class="text-xl focus:outline-none hover:text-blue-500 transition" title="Cari Berita">
@@ -127,7 +132,7 @@
           </button>
 
           <!-- Status Dashboard Auth Switcher -->
-          <button id="auth-header-btn" onclick="showLoginView()" class="text-xs bg-slate-100 hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-3.5 py-1.5 rounded-lg font-bold transition flex items-center space-x-1.5 border border-slate-200 dark:border-slate-700">
+          <button id="auth-header-btn" onclick="showLoginView()" class="text-xs bg-slate-100/80 hover:bg-red-50 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-3.5 py-2 rounded-xl font-bold transition flex items-center space-x-2 border border-slate-200/50 dark:border-slate-700">
             <i class="fas fa-user-shield text-red-600"></i>
             <span id="auth-btn-text">Login Admin</span>
           </button>
@@ -135,35 +140,30 @@
       </div>
 
       <!-- Categories Navigation Bar - Blue Background -->
-      <div class="bg-[#0f2a68] dark:bg-slate-950 overflow-x-auto no-scrollbar py-3">
-        <div class="max-w-7xl mx-auto px-4 flex space-x-6 text-xs font-extrabold whitespace-nowrap text-white/95">
-          <button onclick="filterByCategory('Semua')" class="category-btn border-b-2 border-white pb-1 text-white tracking-wider">TERBARU</button>
-          <button onclick="filterByCategory('Nasional')" class="category-btn text-white/70 hover:text-white pb-1 tracking-wider">NASIONAL</button>
-          <button onclick="filterByCategory('Politik')" class="category-btn text-white/70 hover:text-white pb-1 tracking-wider">POLITIK</button>
-          <button onclick="filterByCategory('Ekonomi')" class="category-btn text-white/70 hover:text-white pb-1 tracking-wider">EKONOMI</button>
-          <button onclick="filterByCategory('Dunia')" class="category-btn text-white/70 hover:text-white pb-1 tracking-wider">DUNIA</button>
-          <button onclick="filterByCategory('Teknologi')" class="category-btn text-white/70 hover:text-white pb-1 tracking-wider">TEKNOLOGI</button>
+      <div class="bg-[#0f2a68] dark:bg-slate-950 overflow-x-auto no-scrollbar py-3 border-t border-blue-800/20 dark:border-slate-900">
+        <div id="dynamic-category-nav" class="max-w-7xl mx-auto px-4 flex space-x-7 text-xs font-bold whitespace-nowrap text-white/90">
+          <!-- Dynamically populated categories -->
         </div>
       </div>
 
       <!-- Live Search Bar Container -->
-      <div id="search-bar" class="hidden bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-4 py-3 transition-all">
+      <div id="search-bar" class="hidden bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-4 py-3.5 transition-all">
         <div class="max-w-7xl mx-auto flex items-center">
-          <input type="text" id="input-search" oninput="handleSearch(this.value)" placeholder="Ketik kata kunci pencarian berita..." class="w-full bg-white dark:bg-slate-700 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-600">
+          <input type="text" id="input-search" oninput="handleSearch(this.value)" placeholder="Ketik kata kunci pencarian berita..." class="w-full bg-white dark:bg-slate-700 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-600 shadow-inner">
           <button onclick="toggleSearchBar()" class="ml-3 text-slate-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
         </div>
       </div>
     </header>
 
     <!-- Breaking News Ticker -->
-    <section class="bg-slate-950 text-white py-2.5 px-4 text-xs flex items-center no-print">
+    <section class="bg-slate-950 text-white py-2.5 px-4 text-xs flex items-center no-print border-b border-red-600/10">
       <div class="max-w-7xl mx-auto w-full flex items-center">
-        <div class="bg-red-600 text-white px-2.5 py-1 rounded font-black uppercase tracking-wider flex items-center space-x-1 shrink-0 animate-pulse text-[10px]">
+        <div class="bg-red-600 text-white px-3 py-1 rounded-md font-extrabold uppercase tracking-wider flex items-center space-x-1 shrink-0 animate-pulse text-[10px] shadow-sm shadow-red-600/20">
           <i class="fas fa-bolt animate-bounce"></i>
           <span>Breaking News</span>
         </div>
-        <div class="overflow-hidden relative w-full h-5 ml-3 flex items-center">
-          <div id="ticker-text" class="absolute whitespace-nowrap animate-[marquee_25s_linear_infinite] text-slate-200 font-medium hover:[animation-play-state:paused] cursor-pointer">
+        <div class="overflow-hidden relative w-full h-5 ml-3.5 flex items-center">
+          <div id="ticker-text" class="absolute whitespace-nowrap animate-[marquee_25s_linear_infinite] text-slate-200 font-medium hover:[animation-play-state:paused] cursor-pointer tracking-wide">
             Memuat tajuk utama hari ini secara langsung... tetap pantau SarjanaNews untuk liputan independen tepercaya.
           </div>
         </div>
@@ -171,26 +171,26 @@
     </section>
 
     <!-- Main Content Container -->
-    <main class="max-w-7xl mx-auto w-full flex-grow py-6 px-4">
+    <main class="max-w-7xl mx-auto w-full flex-grow py-8 px-4">
       <div class="lg:grid lg:grid-cols-12 lg:gap-8">
         
         <!-- KOLOM UTAMA (KIRI) -->
-        <div class="lg:col-span-8 space-y-6">
+        <div class="lg:col-span-8 space-y-8">
           
           <!-- Hero Banner Section -->
           <section id="hero-section" class="no-print">
-            <div class="relative rounded-2xl overflow-hidden aspect-[16/10] md:aspect-[16/9] lg:aspect-[16/9.5] shadow-lg group cursor-pointer border border-slate-100 dark:border-slate-800" id="hero-click-area">
-              <img id="hero-image" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80" alt="Headline News" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent flex flex-col justify-end p-6">
-                <span id="hero-badge" class="bg-red-600 text-white text-[11px] font-black px-2.5 py-1 rounded w-max mb-3 uppercase tracking-wider">NASIONAL</span>
-                <h1 id="hero-title" class="text-white text-lg md:text-2xl lg:text-3xl font-bold leading-tight group-hover:underline font-serif">Memuat Berita Utama...</h1>
-                <p id="hero-desc" class="text-slate-300 text-xs md:text-sm mt-2 line-clamp-2 max-w-2xl font-light">Mendapatkan data dari server cloud...</p>
-                <p id="hero-meta" class="text-slate-400 text-xs mt-2">-</p>
+            <div class="relative rounded-3xl overflow-hidden aspect-[16/10] md:aspect-[16/9] lg:aspect-[16/9.5] shadow-xl group cursor-pointer border border-slate-100 dark:border-slate-800" id="hero-click-area">
+              <img id="hero-image" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80" alt="Headline News" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6 md:p-8">
+                <span id="hero-badge" class="bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded w-max mb-3 uppercase tracking-wider shadow-md shadow-red-600/20">NASIONAL</span>
+                <h1 id="hero-title" class="text-white text-xl md:text-2xl lg:text-3xl font-bold leading-tight group-hover:underline font-serif">Memuat Berita Utama...</h1>
+                <p id="hero-desc" class="text-slate-300 text-xs md:text-sm mt-2.5 line-clamp-2 max-w-2xl font-light leading-relaxed">Mendapatkan data dari server cloud...</p>
+                <p id="hero-meta" class="text-slate-400 text-[11px] mt-2.5">-</p>
               </div>
             </div>
             <!-- Dot Navigation Indicators -->
-            <div class="flex justify-center space-x-2 mt-3">
-              <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
+            <div class="flex justify-center space-x-2 mt-4">
+              <span class="w-3 h-3 rounded-full bg-red-600"></span>
               <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
               <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
               <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
@@ -200,54 +200,25 @@
 
           <!-- Circular Category Buttons Section -->
           <section class="no-print">
-            <div class="grid grid-cols-5 gap-2 text-center bg-white dark:bg-slate-900 py-5 px-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
-              <button onclick="filterByCategory('Semua')" class="group flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-200 group-hover:bg-red-600 group-hover:text-white transition duration-200 shadow-sm">
-                  <i class="far fa-clock text-lg"></i>
-                </div>
-                <span class="text-xs font-bold mt-2 text-slate-600 dark:text-slate-400">Terbaru</span>
-              </button>
-              <button onclick="filterByCategory('Nasional')" class="group flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-200 group-hover:bg-red-600 group-hover:text-white transition duration-200 shadow-sm">
-                  <i class="fas fa-university text-lg"></i>
-                </div>
-                <span class="text-xs font-bold mt-2 text-slate-600 dark:text-slate-400">Nasional</span>
-              </button>
-              <button onclick="filterByCategory('Politik')" class="group flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-200 group-hover:bg-red-600 group-hover:text-white transition duration-200 shadow-sm">
-                  <i class="fas fa-users-cog text-lg"></i>
-                </div>
-                <span class="text-xs font-bold mt-2 text-slate-600 dark:text-slate-400">Politik</span>
-              </button>
-              <button onclick="filterByCategory('Ekonomi')" class="group flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-200 group-hover:bg-red-600 group-hover:text-white transition duration-200 shadow-sm">
-                  <i class="fas fa-chart-line text-lg"></i>
-                </div>
-                <span class="text-xs font-bold mt-2 text-slate-600 dark:text-slate-400">Ekonomi</span>
-              </button>
-              <button onclick="openBookmarksView()" class="group flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-200 group-hover:bg-red-600 group-hover:text-white transition duration-200 shadow-sm">
-                  <i class="fas fa-bookmark text-lg"></i>
-                </div>
-                <span class="text-xs font-bold mt-2 text-slate-600 dark:text-slate-400">Disimpan</span>
-              </button>
+            <div id="circular-categories-container" class="grid grid-cols-5 gap-2 text-center bg-white dark:bg-slate-900 py-6 px-4 rounded-3xl shadow-premium border border-slate-100 dark:border-slate-800/80">
+              <!-- Dynamically populated circular category buttons -->
             </div>
           </section>
 
           <!-- Recent News (White Background Base) -->
-          <section class="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
+          <section class="bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-8 shadow-premium border border-slate-100 dark:border-slate-800/85">
             <!-- Section Header -->
-            <div class="flex items-center justify-between mb-5 border-b pb-4 border-slate-100 dark:border-slate-800 no-print">
+            <div class="flex items-center justify-between mb-6 border-b pb-4 border-slate-100 dark:border-slate-800/80 no-print">
               <h2 id="recent-title" class="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center">
-                <span class="w-1 h-5 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA TERBARU
+                <span class="w-1 h-5 bg-red-600 mr-2.5 inline-block rounded-full shadow shadow-red-600/30"></span>BERITA TERBARU
               </h2>
-              <button onclick="filterByCategory('Semua')" class="text-blue-600 hover:text-red-600 font-extrabold text-xs uppercase flex items-center space-x-1 transition">
-                <span>LIHAT SEMUA</span> <i class="fas fa-chevron-right text-[9px]"></i>
+              <button onclick="filterByCategory('Semua')" class="text-blue-600 hover:text-red-600 font-black text-xs uppercase flex items-center space-x-1 transition">
+                <span>LIHAT SEMUA</span> <i class="fas fa-chevron-right text-[8px]"></i>
               </button>
             </div>
 
             <!-- News Container Grid -->
-            <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5 no-print">
+            <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 no-print">
               <div class="col-span-full text-center py-12">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-2 border-red-600 border-t-transparent mb-3"></div>
                 <p class="text-sm text-slate-500">Menghubungkan langsung ke cloud database...</p>
@@ -266,42 +237,42 @@
         <aside class="hidden lg:block lg:col-span-4 space-y-6 no-print">
           
           <!-- Sync & Cloud Status -->
-          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/80 shadow-premium space-y-4">
             <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center">
-              <span class="w-1 h-4 bg-blue-600 mr-2.5 inline-block rounded-full"></span>STATUS KEPENDUDUKAN DATA
+              <span class="w-1 h-4 bg-blue-600 mr-2.5 inline-block rounded-full shadow shadow-blue-600/30"></span>STATUS DATABASE
             </h3>
-            <div class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
+            <div class="flex items-center space-x-3.5 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/60">
               <span class="flex h-3 w-3 relative">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
               </span>
               <div class="flex-1">
-                <p id="cloud-status-text" class="text-xs font-bold text-slate-700 dark:text-slate-300">Direct REST Bypass Aktif</p>
+                <p id="cloud-status-text" class="text-xs font-bold text-slate-700 dark:text-slate-300">Mode Pratinjau Aktif</p>
                 <p class="text-[10px] text-slate-400">Read: Firebase RTDB / Write: GAS Tokenized</p>
               </div>
             </div>
           </div>
 
           <!-- Popular / Trending Widget -->
-          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/80 shadow-premium space-y-4">
             <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center">
-              <span class="w-1 h-4 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA POPULER
+              <span class="w-1 h-4 bg-red-600 mr-2.5 inline-block rounded-full shadow shadow-red-600/30"></span>BERITA POPULER
             </h3>
             
-            <div class="space-y-4 divide-y divide-slate-100 dark:divide-slate-800">
-              <div class="flex items-start space-x-3 pt-3 first:pt-0">
-                <span class="text-3xl font-black text-slate-300 dark:text-slate-700 italic font-serif leading-none font-black">01</span>
+            <div class="space-y-4.5 divide-y divide-slate-100 dark:divide-slate-800">
+              <div class="flex items-start space-x-3.5 pt-4 first:pt-0">
+                <span class="text-3xl font-black text-slate-200 dark:text-slate-700 italic font-serif leading-none">01</span>
                 <div>
-                  <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 hover:text-red-600 transition leading-snug cursor-pointer line-clamp-2" onclick="filterByCategory('Politik')">
+                  <h4 class="text-xs md:text-sm font-semibold text-slate-800 dark:text-slate-200 hover:text-red-600 transition leading-snug cursor-pointer line-clamp-2" onclick="filterByCategory('Politik')">
                     Persiapan Pilkada Serentak Diperketat di Seluruh Wilayah Utama
                   </h4>
                   <p class="text-[10px] text-slate-400 mt-1">15.2k pembaca</p>
                 </div>
               </div>
-              <div class="flex items-start space-x-3 pt-3">
-                <span class="text-3xl font-black text-slate-300 dark:text-slate-700 italic font-serif leading-none font-black">02</span>
+              <div class="flex items-start space-x-3.5 pt-4">
+                <span class="text-3xl font-black text-slate-200 dark:text-slate-700 italic font-serif leading-none">02</span>
                 <div>
-                  <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 hover:text-red-600 transition leading-snug cursor-pointer line-clamp-2" onclick="filterByCategory('Teknologi')">
+                  <h4 class="text-xs md:text-sm font-semibold text-slate-800 dark:text-slate-200 hover:text-red-600 transition leading-snug cursor-pointer line-clamp-2" onclick="filterByCategory('Teknologi')">
                     AI Generatif Terkini Mulai Diterapkan pada Industri Berita Nasional
                   </h4>
                   <p class="text-[10px] text-slate-400 mt-1">11.8k pembaca</p>
@@ -311,12 +282,12 @@
           </div>
 
           <!-- Newsletter Banner Widget -->
-          <div class="bg-gradient-to-br from-[#0f2a68] to-slate-900 rounded-2xl p-5 text-white border border-slate-800 shadow-sm space-y-3">
-            <h4 class="text-sm font-bold font-serif">Ikuti Terus Update Terbaru</h4>
-            <p class="text-xs text-white/70 font-light">Dapatkan rangkuman buletin berita terhangat harian langsung ke email Anda gratis.</p>
-            <div class="space-y-2 pt-1">
-              <input type="email" placeholder="Alamat Email Anda" class="w-full text-xs text-slate-950 px-3.5 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium">
-              <button class="w-full text-xs font-bold bg-red-600 hover:bg-red-700 py-2 rounded-lg transition" onclick="showToast('Terima kasih telah berlangganan!')">Langganan Sekarang</button>
+          <div class="bg-gradient-to-br from-[#0f2a68] to-slate-900 rounded-3xl p-6 text-white border border-slate-800 shadow-lg space-y-4">
+            <h4 class="text-sm font-bold font-serif tracking-wide text-white/95">Ikuti Terus Update Terbaru</h4>
+            <p class="text-xs text-white/70 font-light leading-relaxed">Dapatkan rangkuman buletin berita terhangat harian langsung ke email Anda gratis.</p>
+            <div class="space-y-2.5 pt-1">
+              <input type="email" placeholder="Alamat Email Anda" class="w-full text-xs text-slate-950 px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 font-medium bg-white/95 shadow-inner">
+              <button class="w-full text-xs font-bold bg-red-600 hover:bg-red-700 py-2.5 rounded-xl transition shadow shadow-red-600/30" onclick="showToast('Terima kasih telah berlangganan!')">Langganan Sekarang</button>
             </div>
           </div>
 
@@ -326,43 +297,44 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 py-8 text-center text-xs text-slate-400 mt-auto no-print">
-      <div class="max-w-7xl mx-auto px-4 space-y-2">
+    <footer class="bg-slate-900 border-t border-slate-800 py-10 text-center text-xs text-slate-400 mt-auto no-print">
+      <div class="max-w-7xl mx-auto px-4 space-y-3">
         <p class="font-bold text-white text-sm">SARJANANEWS.com</p>
-        <p class="max-w-md mx-auto text-[11px] text-slate-500">Portal berita masa kini yang didukung teknologi database terdistribusi cloud tercepat.</p>
-        <p class="pt-2">&copy; 2026 Web Builder Pro-Sarjanasoft. All Rights Reserved.</p>
+        <p class="max-w-md mx-auto text-[11px] text-slate-500 leading-relaxed">Portal berita masa kini yang didukung teknologi database terdistribusi cloud tercepat.</p>
+        <div class="h-px bg-slate-800/60 max-w-xs mx-auto my-3"></div>
+        <p class="text-[10px] text-slate-500">&copy; 2026 Web Builder Pro-Sarjanasoft. All Rights Reserved.</p>
       </div>
     </footer>
   </div>
 
   <!-- ==================== LOGIN VIEW ==================== -->
   <div id="login-view" class="hidden min-h-screen flex items-center justify-center px-4 bg-slate-950">
-    <div class="bg-slate-900 p-8 rounded-2xl w-full max-w-sm border border-slate-800 shadow-2xl space-y-6">
+    <div class="bg-slate-900 p-8 rounded-3xl w-full max-w-sm border border-slate-800 shadow-2xl space-y-6">
       <div class="text-center space-y-2">
         <span class="text-2xl font-black text-white">SARJANA<span class="text-red-600">NEWS</span></span>
-        <p class="text-xs text-slate-400">Verifikasi Kredensial Serverless Admin</p>
+        <p class="text-xs text-slate-400 font-light">Verifikasi Kredensial Serverless Admin</p>
       </div>
       <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5">Username</label>
-          <input type="text" id="login-username" required class="w-full bg-slate-800 text-white rounded-lg px-3.5 py-2 text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+          <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">Username</label>
+          <input type="text" id="login-username" required class="w-full bg-slate-800 text-white rounded-xl px-4 py-2.5 text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5">Password</label>
-          <input type="password" id="login-password" required class="w-full bg-slate-800 text-white rounded-lg px-3.5 py-2 text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+          <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">Password</label>
+          <input type="password" id="login-password" required class="w-full bg-slate-800 text-white rounded-xl px-4 py-2.5 text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
         </div>
-        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg transition text-xs">Otorisasi Masuk</button>
+        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase tracking-wider shadow shadow-red-600/30">Otorisasi Masuk</button>
       </form>
-      <button onclick="showFrontEndView()" class="w-full text-slate-400 hover:text-white text-[11px] font-semibold text-center mt-2 flex items-center justify-center space-x-1.5 transition">
+      <button onclick="showFrontEndView()" class="w-full text-slate-400 hover:text-white text-[11px] font-semibold text-center mt-2 flex items-center justify-center space-x-2 transition">
         <i class="fas fa-arrow-left text-[11px]"></i> <span>Kembali ke Portal Berita</span>
       </button>
     </div>
   </div>
 
   <!-- ==================== ADMIN DASHBOARD VIEW ==================== -->
-  <div id="admin-view" class="hidden min-h-screen bg-slate-100 dark:bg-slate-950 flex">
-    <!-- Sidebar Menu -->
-    <aside class="w-64 bg-slate-900 text-white p-5 flex flex-col justify-between shrink-0 hidden md:flex border-r border-slate-800">
+  <div id="admin-view" class="hidden min-h-screen bg-slate-50 dark:bg-slate-950 flex relative">
+    <!-- Sidebar Menu (With Mobile Slide-over Drawer behavior) -->
+    <aside id="admin-sidebar" class="w-64 bg-slate-900 text-white p-5 flex flex-col justify-between shrink-0 fixed md:static inset-y-0 left-0 z-50 -translate-x-full md:translate-x-0 transition-transform duration-300 flex border-r border-slate-800">
       <div class="space-y-6">
         <div class="text-lg font-black tracking-tight">DASHBOARD<span class="text-red-600">.</span></div>
         <nav class="space-y-1.5">
@@ -371,6 +343,10 @@
           </button>
           <button onclick="setAdminTab('add')" class="w-full text-left py-2.5 px-3.5 rounded-lg flex items-center space-x-3.5 text-slate-300 hover:bg-slate-800 hover:text-white admin-nav-tab text-xs font-bold" id="tab-add">
             <i class="fas fa-edit w-4"></i><span>Tulis Berita Baru</span>
+          </button>
+          <!-- FIXED & ADDED "PENGATURAN PORTAL" SIDEBAR NAVIGATION MENU -->
+          <button onclick="setAdminTab('settings')" class="w-full text-left py-2.5 px-3.5 rounded-lg flex items-center space-x-3.5 text-slate-300 hover:bg-slate-800 hover:text-white admin-nav-tab text-xs font-bold" id="tab-settings">
+            <i class="fas fa-sliders-h w-4"></i><span>Pengaturan Portal</span>
           </button>
         </nav>
       </div>
@@ -381,12 +357,15 @@
       </div>
     </aside>
 
+    <!-- Mobile Sidebar Overlay background -->
+    <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-40 md:hidden" onclick="toggleAdminSidebar()"></div>
+
     <!-- Admin Content Area -->
     <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
       <!-- Admin Top Nav -->
       <header class="bg-white dark:bg-slate-900 shadow-sm px-6 py-4 flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <button class="md:hidden text-xl focus:outline-none" onclick="toggleAdminSidebar()"><i class="fas fa-bars"></i></button>
+          <button class="text-xl focus:outline-none md:hidden" onclick="toggleAdminSidebar()"><i class="fas fa-bars"></i></button>
           <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100" id="admin-page-title">Sistem Penulisan Berita</h2>
         </div>
         <div class="flex items-center space-x-4">
@@ -395,14 +374,14 @@
       </header>
 
       <!-- Tab Content: List/Manage Articles -->
-      <main id="admin-tab-list" class="p-6 flex-grow space-y-5">
+      <main id="admin-tab-list" class="p-6 flex-grow space-y-5 max-w-6xl">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Arsip Berita Aktif</h3>
           <div class="flex items-center space-x-3">
-            <button onclick="triggerPrintReport()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-2 shadow-md transition">
+            <button onclick="triggerPrintReport()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-2 shadow transition">
               <i class="fas fa-print"></i><span>Cetak Laporan PDF</span>
             </button>
-            <button onclick="setAdminTab('add')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-2 shadow-md transition">
+            <button onclick="setAdminTab('add')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-2 shadow transition">
               <i class="fas fa-plus"></i><span>Tulis Berita</span>
             </button>
           </div>
@@ -444,11 +423,7 @@
             <div>
               <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase">Kategori</label>
               <select id="article-category" class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg px-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
-                <option value="Nasional">Nasional</option>
-                <option value="Politik">Politik</option>
-                <option value="Ekonomi">Ekonomi</option>
-                <option value="Dunia">Dunia</option>
-                <option value="Teknologi">Teknologi</option>
+                <!-- Dynamically loaded -->
               </select>
             </div>
           </div>
@@ -484,6 +459,49 @@
           </div>
         </form>
       </main>
+
+      <!-- NEWLY ADDED TAB CONTENT: PORTAL SETTINGS (CATEGORIES & BREAKING NEWS CONTROL) -->
+      <main id="admin-tab-settings" class="p-6 flex-grow hidden max-w-4xl space-y-6">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow space-y-6">
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider font-serif">Pengaturan Portal & Breaking News</h3>
+          
+          <!-- Running Text Ticker Config -->
+          <div class="space-y-3">
+            <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Mode Teks Berjalan (Breaking News)</label>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+              <label class="flex items-center space-x-2 text-xs font-semibold cursor-pointer text-slate-700 dark:text-slate-300">
+                <input type="radio" name="ticker-mode" value="auto" checked onchange="toggleTickerMode('auto')" class="w-4 h-4 text-red-600 focus:ring-red-600">
+                <span>Otomatis (Judul Berita Terbaru)</span>
+              </label>
+              <label class="flex items-center space-x-2 text-xs font-semibold cursor-pointer text-slate-700 dark:text-slate-300">
+                <input type="radio" name="ticker-mode" value="custom" onchange="toggleTickerMode('custom')" class="w-4 h-4 text-red-600 focus:ring-red-600">
+                <span>Teks Kustom Sendiri</span>
+              </label>
+            </div>
+            <div id="custom-ticker-container" class="hidden pt-1.5">
+              <input type="text" id="custom-ticker-input" placeholder="Tulis pengumuman penting berjalan di sini..." class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg px-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+            </div>
+          </div>
+
+          <!-- Category Management Area -->
+          <div class="space-y-4 pt-5 border-t border-slate-100 dark:border-slate-800">
+            <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Kelola Kategori Menu Navigasi</label>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <input type="text" id="new-category-input" placeholder="Masukkan nama kategori baru (cth: Olahraga)..." class="w-full sm:max-w-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg px-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+              <button type="button" onclick="addNewCategory()" class="w-full sm:w-auto px-4.5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg transition shrink-0">Tambah</button>
+            </div>
+            
+            <p class="text-[10px] text-slate-400 font-medium">Klik tanda silang (x) di sebelah nama kategori untuk menghapusnya:</p>
+            <div class="flex flex-wrap gap-2 pt-1" id="admin-categories-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-5 border-t border-slate-200 dark:border-slate-800">
+            <button type="button" onclick="savePortalSettings()" class="px-5 py-2 text-xs font-bold text-white bg-[#0f2a68] hover:bg-blue-800 rounded-lg transition uppercase tracking-wider">Simpan Semua Pengaturan</button>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 
@@ -503,6 +521,9 @@
     // Application State
     let articles = [];
     let bookmarks = JSON.parse(localStorage.getItem('news_bookmarks')) || [];
+    let categories = JSON.parse(localStorage.getItem('portal_categories')) || ['Nasional', 'Politik', 'Ekonomi', 'Dunia', 'Teknologi'];
+    let tickerSettings = JSON.parse(localStorage.getItem('portal_ticker')) || { mode: 'auto', text: '' };
+    
     let currentTab = 'list';
     let selectedCategory = 'Semua';
     let searchQuery = '';
@@ -551,8 +572,10 @@
       // Load Session Login Token
       checkAdminSessionState();
 
-      // Load Articles
-      fetchArticles();
+      // Fetch dynamic settings and categories first, then fetch articles
+      fetchPortalSettings().then(() => {
+        fetchArticles();
+      });
     });
 
     // PWA Service Worker Register Basic
@@ -664,25 +687,138 @@
       }
     }
 
-    // Fetch Articles - BYPASS OPTIMIZATION (GET Direct from Firebase REST API)
-    async function fetchArticles() {
+    // -------------------------------------------------------------------
+    // DYNAMIC SETTINGS & CATEGORIES ENGINE
+    // -------------------------------------------------------------------
+    async function fetchPortalSettings() {
       // Deteksi jika masih menggunakan URL database contoh bawaan (placeholder)
       const isPlaceholderDB = FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
-      
+
       if (isPlaceholderDB) {
-        // Jalankan mode demo secara mulus tanpa menampilkan banner error yang merusak estetika
         isOfflineMode = true;
         document.getElementById('offline-banner').classList.add('hidden');
         document.getElementById('cloud-status-text').innerText = "Mode Pratinjau Aktif";
+        loadFallbackSettings();
+        return;
+      }
+
+      try {
+        const response = await fetch(`${FIREBASE_DB_URL}settings/config.json`);
+        if (!response.ok) throw new Error("Settings direct fetch error");
+        const data = await response.json();
+        
+        if (data) {
+          if (data.categories) {
+            categories = data.categories;
+            localStorage.setItem('portal_categories', JSON.stringify(categories));
+          }
+          if (data.ticker) {
+            tickerSettings = data.ticker;
+            localStorage.setItem('portal_ticker', JSON.stringify(tickerSettings));
+          }
+        }
+        isOfflineMode = false;
+        document.getElementById('offline-banner').classList.add('hidden');
+        document.getElementById('cloud-status-text').innerText = "Direct REST Bypass Aktif";
+      } catch (e) {
+        console.warn("Direct settings fetch error, loading cache...", e);
+        isOfflineMode = true;
+        document.getElementById('offline-banner').classList.remove('hidden');
+        document.getElementById('cloud-status-text').innerText = "Mode Demo Luring";
+        loadFallbackSettings();
+      }
+
+      renderCategoryNav();
+      renderCircularCategories();
+      renderCategoryDropdown();
+      updateBreakingNews();
+    }
+
+    function loadFallbackSettings() {
+      categories = JSON.parse(localStorage.getItem('portal_categories')) || ['Nasional', 'Politik', 'Ekonomi', 'Dunia', 'Teknologi'];
+      tickerSettings = JSON.parse(localStorage.getItem('portal_ticker')) || { mode: 'auto', text: '' };
+    }
+
+    function renderCategoryNav() {
+      const container = document.getElementById('dynamic-category-nav');
+      if (!container) return;
+      
+      let html = `<button onclick="filterByCategory('Semua')" class="category-btn ${selectedCategory === 'Semua' ? 'border-b-2 border-white text-white' : 'text-white/70 hover:text-white'} pb-1 tracking-wider">TERBARU</button>`;
+      
+      categories.forEach(cat => {
+        html += `<button onclick="filterByCategory('${cat}')" class="category-btn ${selectedCategory === cat ? 'border-b-2 border-white text-white' : 'text-white/70 hover:text-white'} pb-1 tracking-wider uppercase">${cat}</button>`;
+      });
+      
+      container.innerHTML = html;
+    }
+
+    function renderCircularCategories() {
+      const container = document.getElementById('circular-categories-container');
+      if (!container) return;
+      
+      let html = `
+        <button onclick="filterByCategory('Semua')" class="group flex flex-col items-center">
+          <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-200 group-hover:bg-red-600 group-hover:text-white transition duration-200 shadow-sm">
+            <i class="far fa-clock text-lg"></i>
+          </div>
+          <span class="text-xs font-bold mt-2 text-slate-600 dark:text-slate-400">Terbaru</span>
+        </button>
+      `;
+
+      // Gunakan subset maksimal 3 kategori dynamic + 1 bookmarks agar grid 5 kolom terlihat simetris
+      const subset = categories.slice(0, 3);
+      const iconMap = {
+        'Nasional': 'fa-university',
+        'Politik': 'fa-users-cog',
+        'Ekonomi': 'fa-chart-line',
+        'Dunia': 'fa-globe-asia',
+        'Teknologi': 'fa-laptop-code'
+      };
+
+      subset.forEach(cat => {
+        const icon = iconMap[cat] || 'fa-folder-open';
+        html += `
+          <button onclick="filterByCategory('${cat}')" class="group flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-200 group-hover:bg-red-600 group-hover:text-white transition duration-200 shadow-sm">
+              <i class="fas ${icon} text-lg"></i>
+            </div>
+            <span class="text-xs font-bold mt-2 text-slate-600 dark:text-slate-400 truncate w-full px-1">${cat}</span>
+          </button>
+        `;
+      });
+
+      html += `
+        <button onclick="openBookmarksView()" class="group flex flex-col items-center">
+          <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-200 group-hover:bg-red-600 group-hover:text-white transition duration-200 shadow-sm">
+            <i class="fas fa-bookmark text-lg"></i>
+          </div>
+          <span class="text-xs font-bold mt-2 text-slate-600 dark:text-slate-400">Disimpan</span>
+        </button>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function renderCategoryDropdown() {
+      const select = document.getElementById('article-category');
+      if (!select) return;
+      select.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+    }
+
+    // Fetch Articles - BYPASS OPTIMIZATION (GET Direct from Firebase REST API)
+    async function fetchArticles() {
+      const isPlaceholderDB = FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
+      
+      if (isPlaceholderDB) {
+        isOfflineMode = true;
         loadFallbackArticles();
         return;
       }
 
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout trigger
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
         
-        // Membaca data langsung dari endpoint Firebase REST API, menghemat kuota GAS
         const response = await fetch(`${FIREBASE_DB_URL}articles.json`, { signal: controller.signal });
         clearTimeout(timeoutId);
         
@@ -697,19 +833,12 @@
           })).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
         }
         
-        // Sync to fallback cache
         localStorage.setItem('cached_articles', JSON.stringify(articles));
-        isOfflineMode = false;
-        document.getElementById('offline-banner').classList.add('hidden');
-        document.getElementById('cloud-status-text').innerText = "Direct REST Bypass Aktif";
-        
         renderFrontEnd();
         updateBreakingNews();
       } catch (error) {
         console.warn("Direct Firebase Connection Error. Switching to Offline Cache System...", error);
         isOfflineMode = true;
-        document.getElementById('offline-banner').classList.remove('hidden');
-        document.getElementById('cloud-status-text').innerText = "Mode Demo Luring";
         loadFallbackArticles();
       }
     }
@@ -747,24 +876,6 @@
             featured: false,
             content: "<p>Ekosistem startup tanah air kembali menunjukkan daya tarik kuat bagi investor internasional dengan diperolehnya pendanaan seri B terbaru.</p>",
             createdAt: "2025-07-19T06:00:00.000Z"
-          },
-          {
-            id: "mock-4",
-            title: "G7 Sepakat Perkuat Sanksi terhadap Pelanggaran HAM",
-            category: "Dunia",
-            image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
-            featured: false,
-            content: "<p>Para pemimpin negara G7 resmi mengeluarkan deklarasi komitmen bersama untuk meningkatkan pengawasan ketat terhadap keadilan internasional.</p>",
-            createdAt: "2025-07-19T05:55:00.000Z"
-          },
-          {
-            id: "mock-5",
-            title: "5 Destinasi Wisata Alam Tersembunyi Terbaik Tahun Ini",
-            category: "Nasional",
-            image: "https://images.unsplash.com/photo-1472214222541-d510753a4707?auto=format&fit=crop&w=800&q=80",
-            featured: false,
-            content: "<p>Menjelajahi keindahan alam tersembunyi nusantara yang masih asri dan belum banyak dijamah oleh wisatawan lokal maupun internasional.</p>",
-            createdAt: "2025-07-19T05:50:00.000Z"
           }
         ];
         localStorage.setItem('cached_articles', JSON.stringify(articles));
@@ -840,11 +951,20 @@
       }).join('');
     }
 
-    // Update Breaking News Ticker
+    // Update Breaking News Ticker (Support Custom Text and Automatic News Title Mode)
     function updateBreakingNews() {
-      if (articles.length > 0) {
-        const headlineTexts = articles.slice(0, 5).map(art => `🔥 [${art.category}] ${art.title}`).join('  •  ');
-        document.getElementById('ticker-text').innerText = headlineTexts + "  •  ";
+      const tickerTextElement = document.getElementById('ticker-text');
+      if (!tickerTextElement) return;
+
+      if (tickerSettings.mode === 'custom' && tickerSettings.text.trim() !== '') {
+        tickerTextElement.innerText = `🚨 ${tickerSettings.text}  •  🚨 ${tickerSettings.text}  •  `;
+      } else {
+        if (articles.length > 0) {
+          const headlineTexts = articles.slice(0, 5).map(art => `🔥 [${art.category}] ${art.title}`).join('  •  ');
+          tickerTextElement.innerText = headlineTexts + "  •  ";
+        } else {
+          tickerTextElement.innerText = "Memuat tajuk utama hari ini secara langsung... tetap pantau SarjanaNews.";
+        }
       }
     }
 
@@ -856,14 +976,8 @@
       document.getElementById('news-detail-container').classList.add('hidden');
       document.getElementById('news-grid').classList.remove('hidden');
       
-      const buttons = document.querySelectorAll('.category-btn');
-      buttons.forEach(btn => {
-        if (btn.innerText.toUpperCase() === category.toUpperCase() || (category === 'Semua' && btn.innerText.toUpperCase() === 'TERBARU')) {
-          btn.className = "category-btn border-b-2 border-white pb-1 text-white tracking-wider";
-        } else {
-          btn.className = "category-btn text-white/70 hover:text-white pb-1 tracking-wider";
-        }
-      });
+      // Update horizontal nav class activation
+      renderCategoryNav();
 
       document.getElementById('recent-title').innerHTML = `<span class="w-1 h-5 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA ${category.toUpperCase()}`;
       renderFrontEnd();
@@ -1007,7 +1121,7 @@
             ${art.content}
           </div>
 
-          <!-- PREMIUM COMMENTS SYSTEM (REST Fetch & Tokenized Write) -->
+          <!-- PREMIUM COMMENTS SYSTEM -->
           <div class="border-t border-slate-200 dark:border-slate-800 pt-8 mt-12 space-y-6">
             <h3 class="text-base font-black text-slate-900 dark:text-white flex items-center"><i class="far fa-comments mr-2 text-red-600 text-lg"></i>DISKUSI PEMBACA</h3>
             
@@ -1029,7 +1143,6 @@
         </div>
       `;
 
-      // Fetch comments dynamically via bypass
       fetchComments(art.id);
     }
 
@@ -1049,7 +1162,7 @@
         Swal.fire({
           icon: 'success',
           title: 'Gambar Terkompresi!',
-          text: 'Berkas dikonversi ke Base64 (di bawah 100KB) dengan sukses.',
+          text: 'Berkas dikonversi ke Base64 dengan sukses.',
           confirmButtonColor: '#E11D48'
         });
       });
@@ -1064,7 +1177,7 @@
         img.src = event.target.result;
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const maxDimension = 800; // Resize to max width/height 800px
+          const maxDimension = 800;
           let width = img.width;
           let height = img.height;
 
@@ -1085,14 +1198,13 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
           
-          // Compress quality to 0.7 JPEG
           const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
           callback(compressedDataUrl);
         };
       };
     }
 
-    // REAL-TIME COMMENTS CORE (Fetch Bypass / Write through GAS)
+    // Comments Direct Retrieval Engine
     async function fetchComments(articleId) {
       const renderBox = document.getElementById('comments-render-box');
       try {
@@ -1146,7 +1258,6 @@
       };
 
       if (isOfflineMode) {
-        // Safe mock database write if offline
         setTimeout(() => {
           Swal.fire({
             icon: 'warning',
@@ -1162,7 +1273,6 @@
       }
 
       try {
-        // Kirim via GAS untuk proses sanitasi XSS yang aman
         const response = await fetch(`${GAS_URL}?action=addComment&articleId=${articleId}`, {
           method: 'POST',
           body: JSON.stringify(payload)
@@ -1190,7 +1300,7 @@
     }
 
     // -------------------------------------------------------------------
-    // ADMIN FUNCTIONS WITH SECURE GAS TOKENIZATION & LOCAL DEMO BYPASS
+    // ADMIN ACTIONS WITH DYNAMIC SIDEBAR REDIRECTION & VERIFICATION
     // -------------------------------------------------------------------
     async function handleLogin(event) {
       event.preventDefault();
@@ -1203,11 +1313,9 @@
         didOpen: () => { Swal.showLoading(); }
       });
 
-      // Deteksi apakah menggunakan URL default placeholder atau sedang offline untuk bypass otorisasi instan
       const isPlaceholderGAS = GAS_URL.includes("AKfycbwQFtzOa0w9FB1h2RabUZY1kEQr9_rjYXJjLQ5bm9428ysejy1Ha7sR7A3S2F23GUEh");
 
       if (isOfflineMode || isPlaceholderGAS) {
-        // Fallback demo validation in local mode (Case-insensitive)
         if (user.toLowerCase() === 'admin' && pass === 'sarjanasoft') {
           sessionStorage.setItem('admin_token', 'local-demo-token');
           showToast('Masuk Mode Demo Berhasil!');
@@ -1216,7 +1324,7 @@
         } else {
           Swal.fire({
             title: 'Akses Ditolak!',
-            text: 'Kombinasi Username (Admin) & Password (sarjanasoft) salah.',
+            text: 'Username atau Password Administrator salah.',
             icon: 'error',
             confirmButtonColor: '#E11D48'
           });
@@ -1236,26 +1344,17 @@
           showToast('Otorisasi Admin Berhasil!');
           checkAdminSessionState();
           showAdminDashboard();
-          
-          document.getElementById('login-username').value = '';
-          document.getElementById('login-password').value = '';
         } else {
           throw new Error(result.message || "Akses tidak sah");
         }
       } catch (error) {
-        // Jika fetch gagal karena CORS atau belum deploy, coba lakukan login lokal otomatis agar tidak menghalangi pengetesan
         if (user.toLowerCase() === 'admin' && pass === 'sarjanasoft') {
           sessionStorage.setItem('admin_token', 'local-demo-token');
-          showToast('Koneksi Cloud Gagal. Masuk dengan Sesi Lokal!');
+          showToast('Masuk dengan Sesi Lokal!');
           checkAdminSessionState();
           showAdminDashboard();
         } else {
-          Swal.fire({
-            title: 'Akses Ditolak!',
-            text: error.message || 'Koneksi gagal atau kredensial salah!',
-            icon: 'error',
-            confirmButtonColor: '#E11D48'
-          });
+          Swal.fire('Error', 'Koneksi gagal atau kredensial salah!', 'error');
         }
       }
     }
@@ -1268,33 +1367,185 @@
     }
 
     function toggleAdminSidebar() {
-      document.querySelector('aside').classList.toggle('hidden');
+      const sidebar = document.getElementById('admin-sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
     }
 
-    // Tab switcher in admin
     function setAdminTab(tab) {
       currentTab = tab;
+      
+      // Auto-close mobile drawer on tab click
+      const sidebar = document.getElementById('admin-sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      if (window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+
       const tList = document.getElementById('admin-tab-list');
       const tAdd = document.getElementById('admin-tab-add');
+      const tSettings = document.getElementById('admin-tab-settings');
       
       const tabListBtn = document.getElementById('tab-list');
       const tabAddBtn = document.getElementById('tab-add');
+      const tabSettingsBtn = document.getElementById('tab-settings');
 
       tabListBtn.classList.remove('bg-slate-800', 'text-white');
       tabAddBtn.classList.remove('bg-slate-800', 'text-white');
+      tabSettingsBtn.classList.remove('bg-slate-800', 'text-white');
 
       if (tab === 'list') {
         tList.classList.remove('hidden');
         tAdd.classList.add('hidden');
+        tSettings.classList.add('hidden');
         tabListBtn.classList.add('bg-slate-800', 'text-white');
         document.getElementById('admin-page-title').innerText = "Kelola Berita";
         renderAdminList();
-      } else {
+      } else if (tab === 'add') {
         tList.classList.add('hidden');
         tAdd.classList.remove('hidden');
+        tSettings.classList.add('hidden');
         tabAddBtn.classList.add('bg-slate-800', 'text-white');
         document.getElementById('admin-page-title').innerText = "Tulis Berita Baru";
         resetArticleForm();
+      } else if (tab === 'settings') {
+        tList.classList.add('hidden');
+        tAdd.classList.add('hidden');
+        tSettings.classList.remove('hidden');
+        tabSettingsBtn.classList.add('bg-slate-800', 'text-white');
+        document.getElementById('admin-page-title').innerText = "Pengaturan Portal";
+        renderPortalSettingsView();
+      }
+    }
+
+    // Render Portal Settings Tab View
+    function renderPortalSettingsView() {
+      const isAuto = tickerSettings.mode === 'auto';
+      document.querySelector(`input[name="ticker-mode"][value="${tickerSettings.mode}"]`).checked = true;
+      toggleTickerMode(tickerSettings.mode);
+
+      document.getElementById('custom-ticker-input').value = tickerSettings.text || '';
+
+      const listContainer = document.getElementById('admin-categories-list');
+      if (listContainer) {
+        listContainer.innerHTML = categories.map(cat => `
+          <span class="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-850 dark:text-slate-300 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+            <span>${cat}</span>
+            <button type="button" onclick="deleteCategory('${cat}')" class="text-red-500 hover:text-red-700 focus:outline-none"><i class="fas fa-times-circle"></i></button>
+          </span>
+        `).join('');
+      }
+    }
+
+    function toggleTickerMode(mode) {
+      const customContainer = document.getElementById('custom-ticker-container');
+      if (mode === 'custom') {
+        customContainer.classList.remove('hidden');
+      } else {
+        customContainer.classList.add('hidden');
+      }
+    }
+
+    function addNewCategory() {
+      const input = document.getElementById('new-category-input');
+      const val = input.value.trim();
+      if (!val) return;
+      
+      if (categories.map(c => c.toLowerCase()).includes(val.toLowerCase())) {
+        showToast('Kategori sudah ada!', 'error');
+        return;
+      }
+
+      categories.push(val);
+      input.value = '';
+      renderPortalSettingsView();
+      showToast('Kategori ditambahkan!');
+    }
+
+    function deleteCategory(cat) {
+      if (categories.length <= 1) {
+        showToast('Portal wajib memiliki minimal 1 kategori!', 'error');
+        return;
+      }
+      categories = categories.filter(c => c !== cat);
+      renderPortalSettingsView();
+      showToast('Kategori dihapus');
+    }
+
+    // Save configuration settings to Cloud/Local
+    async function savePortalSettings() {
+      const token = sessionStorage.getItem('admin_token');
+      const tickerMode = document.querySelector('input[name="ticker-mode"]:checked').value;
+      const customText = document.getElementById('custom-ticker-input').value;
+
+      tickerSettings = {
+        mode: tickerMode,
+        text: customText
+      };
+
+      localStorage.setItem('portal_categories', JSON.stringify(categories));
+      localStorage.setItem('portal_ticker', JSON.stringify(tickerSettings));
+
+      Swal.fire({
+        title: 'Menyimpan Pengaturan...',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      if (isOfflineMode || token === 'local-demo-token') {
+        setTimeout(() => {
+          Swal.fire({
+            title: 'Berhasil!',
+            text: 'Pengaturan tersimpan sementara di memori browser lokal.',
+            icon: 'success',
+            confirmButtonColor: '#E11D48'
+          }).then(() => {
+            renderCategoryNav();
+            renderCircularCategories();
+            renderCategoryDropdown();
+            updateBreakingNews();
+            setAdminTab('list');
+          });
+        }, 700);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${GAS_URL}?action=saveSettings&token=${token}`, {
+          method: 'POST',
+          body: JSON.stringify({
+            categories: categories,
+            ticker: tickerSettings
+          })
+        });
+        const res = await response.json();
+
+        if (res && res.status === 'success') {
+          Swal.fire({
+            title: 'Disinkronisasikan!',
+            text: 'Semua perubahan menu dan running text resmi tayang di cloud.',
+            icon: 'success',
+            confirmButtonColor: '#E11D48'
+          }).then(() => {
+            fetchPortalSettings();
+            setAdminTab('list');
+          });
+        } else if (res && res.status === 'auth_error') {
+          sessionStorage.removeItem('admin_token');
+          checkAdminSessionState();
+          Swal.fire('Sesi Habis', 'Otorisasi berakhir.', 'warning').then(() => showLoginView());
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        Swal.fire('Error', 'Gagal menyinkronisasikan setelan ke Firebase.', 'error');
       }
     }
 
@@ -1326,7 +1577,7 @@
                 </div>
               </div>
             </td>
-            <td class="px-5 py-4 text-xs font-bold text-slate-600 dark:text-slate-300">
+            <td class="px-5 py-4 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase">
               ${art.category}
             </td>
             <td class="px-5 py-4 text-xs text-slate-500 font-medium">
@@ -1350,7 +1601,7 @@
       document.getElementById('article-id').value = '';
       document.getElementById('article-title').value = '';
       document.getElementById('article-image').value = '';
-      document.getElementById('article-category').value = 'Nasional';
+      document.getElementById('article-category').selectedIndex = 0;
       document.getElementById('article-featured').checked = false;
       quill.root.innerHTML = '';
     }
@@ -1387,7 +1638,6 @@
         createdAt: new Date().toISOString()
       };
 
-      // Safe save to local storage if offline or running local mode
       if (isOfflineMode || token === 'local-demo-token') {
         if (id) {
           articles = articles.map(art => art.id === id ? { ...art, ...payload, id } : art);
@@ -1432,7 +1682,6 @@
             setAdminTab('list');
           });
         } else if (result && result.status === 'auth_error') {
-          // Token expired handling
           sessionStorage.removeItem('admin_token');
           checkAdminSessionState();
           Swal.fire('Sesi Habis', 'Sesi otorisasi admin Anda kedaluwarsa. Silakan masuk kembali.', 'warning').then(() => {
