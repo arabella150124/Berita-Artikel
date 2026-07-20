@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlBvcnRhbCBCZXJpdGEgTW9kZXJuIiwKICAic2hvcnRfbmFtZSI6ICJCZXJpdGFOZXdzIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3UkEiLAogICJ0aGVtZV9jb2xvciI6ICIjMEYxNzJBIgp9">
 
-  <!-- Premium News Editorial Fonts (Lora for Headings & Inter for UI/Body) -->
+  <!-- Premium Editorial Fonts (Lora for News Titles & Inter for Controls) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -507,14 +507,21 @@
 
   <!-- ==================== LOGIKA WEB APPLICATION ==================== -->
   <script>
-    // -------------------------------------------------------------------
     // ATURAN MANDATORI: GAS_URL URL Jembatan App Script
-    // -------------------------------------------------------------------
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxSdVpN_FVlPbIPxwkEFEtdA3t9nhP36vmJzcHsVPb6EdUbYlCvVFkY9dQZ64VxarJm/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbz19r_2Xd9BXaP8GmkaotXcf6NqjpILjoG_l-5mi9R9gRRPdlZFOisP-By5ukXK2JIR/exec";
 
-    // REST API Endpoint URL Firebase Realtime Database (Anti-clash Mapping)
+    // REST API Endpoint URL Firebase Realtime Database
     const FIREBASE_DB_URL = "https://berita-artikel-default-rtdb.asia-southeast1.firebasedatabase.app/";
-    const DB_URL = FIREBASE_DB_URL;
+
+    // -------------------------------------------------------------------
+    // AUTOMATIC SYNC: Deteksi variabel custom DB_URL dari pengguna
+    // -------------------------------------------------------------------
+    function getDbUrl() {
+      if (typeof DB_URL !== 'undefined' && DB_URL) {
+        return DB_URL.endsWith('/') ? DB_URL : DB_URL + '/';
+      }
+      return FIREBASE_DB_URL.endsWith('/') ? FIREBASE_DB_URL : FIREBASE_DB_URL + '/';
+    }
 
     // Application State
     let articles = [];
@@ -681,7 +688,8 @@
     }
 
     async function fetchPortalSettings() {
-      const isPlaceholderDB = FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb") || FIREBASE_DB_URL.includes("placeholder");
+      const dbUrl = getDbUrl();
+      const isPlaceholderDB = dbUrl.includes("sentral-umkm-default-rtdb") || dbUrl.includes("placeholder");
 
       if (isPlaceholderDB) {
         isOfflineMode = true;
@@ -692,7 +700,7 @@
       }
 
       try {
-        const response = await fetch(`${FIREBASE_DB_URL}settings/config.json`);
+        const response = await fetch(`${dbUrl}settings/config.json`);
         if (!response.ok) throw new Error("Settings fetch error");
         const data = await response.json();
         
@@ -794,7 +802,8 @@
     }
 
     async function fetchArticles() {
-      const isPlaceholderDB = FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
+      const dbUrl = getDbUrl();
+      const isPlaceholderDB = dbUrl.includes("sentral-umkm-default-rtdb");
       
       if (isPlaceholderDB) {
         isOfflineMode = true;
@@ -806,7 +815,7 @@
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 6000);
         
-        const response = await fetch(`${FIREBASE_DB_URL}articles.json`, { signal: controller.signal });
+        const response = await fetch(`${dbUrl}articles.json`, { signal: controller.signal });
         clearTimeout(timeoutId);
         
         if (!response.ok) throw new Error("Firebase response error");
@@ -1182,9 +1191,10 @@
     }
 
     async function fetchComments(articleId) {
+      const dbUrl = getDbUrl();
       const renderBox = document.getElementById('comments-render-box');
       try {
-        const response = await fetch(`${FIREBASE_DB_URL}comments/${articleId}.json`);
+        const response = await fetch(`${dbUrl}comments/${articleId}.json`);
         const data = await response.json();
         
         if (!data) {
@@ -1233,33 +1243,31 @@
         createdAt: new Date().toISOString()
       };
 
-      // DETEKSI BYPASS CLOUD: Selalu tulis langsung ke Firebase jika bukan database demo default!
-      const isCustomDB = FIREBASE_DB_URL && !FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
-      if (isCustomDB) {
-        try {
-          const response = await fetch(`${FIREBASE_DB_URL}comments/${articleId}.json`, {
-            method: 'POST',
-            body: JSON.stringify(payload)
+      // FORCED REST COM_WRITE: Tulis langsung ke Firebase REST API (Bebas CORS!)
+      const dbUrl = getDbUrl();
+      try {
+        const response = await fetch(`${dbUrl}comments/${articleId}.json`, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        if (response.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Komentar Terkirim (Cloud)!',
+            text: 'Komentar Anda berhasil dipublikasikan langsung ke cloud database.',
+            confirmButtonColor: '#E11D48'
+          }).then(() => {
+            document.getElementById('comment-author').value = '';
+            document.getElementById('comment-message').value = '';
+            fetchComments(articleId);
           });
-          if (response.ok) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Komentar Terkirim (Cloud)!',
-              text: 'Komentar Anda berhasil dipublikasikan langsung ke cloud database.',
-              confirmButtonColor: '#E11D48'
-            }).then(() => {
-              document.getElementById('comment-author').value = '';
-              document.getElementById('comment-message').value = '';
-              fetchComments(articleId);
-            });
-            return;
-          }
-        } catch (err) {
-          console.warn("Direct Firebase comment failed, falling back to Apps Script...", err);
+          return;
         }
+      } catch (err) {
+        console.warn("Direct Firebase comment failed, trying GAS...", err);
       }
 
-      // Fallback ke Apps Script atau Lokal
+      // Fallback ke Apps Script
       try {
         const response = await fetch(`${GAS_URL}?action=addComment&articleId=${articleId}`, {
           method: 'POST',
@@ -1279,11 +1287,10 @@
             fetchComments(articleId);
           });
         } else {
-          throw new Error("Gagal mengesahkan komentar");
+          throw new Error();
         }
       } catch (err) {
-        // Ultimate fallback
-        Swal.fire('Error', 'Gagal mengirimkan komentar.', 'error');
+        Swal.fire('Error', 'Gagal memproses pengiriman komentar aman.', 'error');
       }
     }
 
@@ -1305,8 +1312,8 @@
           sessionStorage.setItem('admin_token', 'direct-rest-token');
           Swal.fire({
             icon: 'success',
-            title: 'Masuk Mode Penulisan Cloud!',
-            html: `Otorisasi Sesi Berhasil. Sistem mengaktifkan <b>Bypass Direct REST Cloud</b> agar penulisan berita langsung menuju Firebase database.`,
+            title: 'Masuk Mode Penulisan Cloud (CORS Bypass)!',
+            html: `Sistem mendeteksi Anda di dalam iFrame Pratinjau.<br>Mengaktifkan <b>Bypass Direct REST Cloud</b> sehingga data Anda langsung disimpan ke database Firebase Anda.`,
             confirmButtonColor: '#E11D48'
           }).then(() => {
             checkAdminSessionState();
@@ -1476,8 +1483,8 @@
       showToast('Kategori dihapus');
     }
 
+    // SAVING PORTAL CONFIG DIRECTLY TO CLOUD
     async function savePortalSettings() {
-      const token = sessionStorage.getItem('admin_token');
       const tickerMode = document.querySelector('input[name="ticker-mode"]:checked').value;
       const customText = document.getElementById('custom-ticker-input').value;
 
@@ -1495,42 +1502,37 @@
         didOpen: () => { Swal.showLoading(); }
       });
 
-      // BYPASS DIRECT REST WRITE: Selalu tulis langsung ke Firebase Cloud jika bukan database demo!
-      const isCustomDB = FIREBASE_DB_URL && !FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
-      if (isCustomDB) {
-        try {
-          const response = await fetch(`${FIREBASE_DB_URL}settings/config.json`, {
-            method: 'PUT',
-            body: JSON.stringify({
-              categories: categories,
-              ticker: tickerSettings
-            })
+      const dbUrl = getDbUrl();
+      try {
+        const response = await fetch(`${dbUrl}settings/config.json`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            categories: categories,
+            ticker: tickerSettings
+          })
+        });
+        if (response.ok) {
+          Swal.fire({
+            title: 'Disinkronisasikan (Cloud)!',
+            text: 'Kategori dan running text berhasil disimpan langsung ke Firebase Cloud Anda.',
+            icon: 'success',
+            confirmButtonColor: '#E11D48'
+          }).then(() => {
+            renderCategoryNav();
+            renderCircularCategories();
+            renderCategoryDropdown();
+            updateBreakingNews();
+            setAdminTab('list');
           });
-          if (response.ok) {
-            Swal.fire({
-              title: 'Disinkronisasikan (Cloud)!',
-              text: 'Kategori dan running text berhasil disimpan langsung ke Firebase Cloud Anda.',
-              icon: 'success',
-              confirmButtonColor: '#E11D48'
-            }).then(() => {
-              renderCategoryNav();
-              renderCircularCategories();
-              renderCategoryDropdown();
-              updateBreakingNews();
-              setAdminTab('list');
-            });
-            return;
-          }
-        } catch (err) {
-          console.warn("Direct Firebase settings write failed, saving locally...", err);
+          return;
+        } else {
+          throw new Error("HTTP Status " + response.status);
         }
-      }
-
-      // Fallback save lokal
-      setTimeout(() => {
+      } catch (err) {
+        console.error("Direct Firebase settings write failed", err);
         Swal.fire({
-          title: 'Berhasil (Lokal)!',
-          text: 'Pengaturan disimpan sementara di memori browser.',
+          title: 'Gagal Menyimpan ke Cloud!',
+          text: 'Koneksi ke Firebase gagal: ' + err.message + '. Setelan hanya tersimpan sementara secara lokal.',
           icon: 'warning',
           confirmButtonColor: '#E11D48'
         }).then(() => {
@@ -1540,7 +1542,7 @@
           updateBreakingNews();
           setAdminTab('list');
         });
-      }, 700);
+      }
     }
 
     function renderAdminList() {
@@ -1599,6 +1601,7 @@
       quill.root.innerHTML = '';
     }
 
+    // SAVING ARTICLE DIRECTLY TO CLOUD
     async function handleSaveArticle(event) {
       event.preventDefault();
 
@@ -1608,7 +1611,6 @@
       const image = document.getElementById('article-image').value;
       const featured = document.getElementById('article-featured').checked;
       const content = quill.root.innerHTML;
-      const token = sessionStorage.getItem('admin_token');
 
       if (!title || !image || !content.trim() || content === '<p><br></p>') {
         showToast('Mohon lengkapi seluruh kolom isian!', 'error');
@@ -1630,57 +1632,56 @@
         createdAt: new Date().toISOString()
       };
 
-      // DETEKSI CLOUD DIRECT WRITE: Selalu utamakan nulis ke Firebase Cloud milik user!
-      const isCustomDB = FIREBASE_DB_URL && !FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
-      if (isCustomDB) {
-        try {
-          let url = `${FIREBASE_DB_URL}articles.json`;
-          let method = 'POST';
-          if (id) {
-            url = `${FIREBASE_DB_URL}articles/${id}.json`;
-            method = 'PATCH';
-          }
-
-          const response = await fetch(url, {
-            method: method,
-            body: JSON.stringify(payload)
-          });
-
-          if (response.ok) {
-            Swal.fire({
-              title: 'Tersimpan (Cloud Database)!',
-              text: 'Berita sukses disimpan langsung ke Firebase Cloud Anda secara permanen!',
-              icon: 'success',
-              confirmButtonColor: '#E11D48'
-            }).then(() => {
-              fetchArticles();
-              setAdminTab('list');
-            });
-            return;
-          }
-        } catch (err) {
-          console.warn("Direct Cloud Write Error, falling back to local...", err);
+      const dbUrl = getDbUrl();
+      try {
+        let url = `${dbUrl}articles.json`;
+        let method = 'POST';
+        if (id) {
+          url = `${dbUrl}articles/${id}.json`;
+          method = 'PATCH'; // Gunakan PATCH untuk pembaruan data
         }
-      }
 
-      // Fallback ke penyimpanan lokal jika terpaksa offline/pake database placeholder
-      if (id) {
-        articles = articles.map(art => art.id === id ? { ...art, ...payload, id } : art);
-      } else {
-        const localId = 'local-' + Date.now();
-        articles.unshift({ id: localId, ...payload });
+        const response = await fetch(url, {
+          method: method,
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          Swal.fire({
+            title: 'Tersimpan (Cloud Database)!',
+            text: 'Berita sukses disimpan langsung ke Firebase Cloud Anda secara permanen!',
+            icon: 'success',
+            confirmButtonColor: '#E11D48'
+          }).then(() => {
+            fetchArticles();
+            setAdminTab('list');
+          });
+          return;
+        } else {
+          throw new Error("HTTP Status " + response.status);
+        }
+      } catch (err) {
+        console.error("Direct Cloud Write Error", err);
+        
+        // Simpan ke local jika benar-benar gagal koneksi
+        if (id) {
+          articles = articles.map(art => art.id === id ? { ...art, ...payload, id } : art);
+        } else {
+          const localId = 'local-' + Date.now();
+          articles.unshift({ id: localId, ...payload });
+        }
+        localStorage.setItem('cached_articles', JSON.stringify(articles));
+
+        Swal.fire({
+          title: 'Koneksi Cloud Gagal!',
+          text: 'Gagal terhubung ke Firebase (' + err.message + '). Berita Anda disimpan secara lokal di browser ini.',
+          icon: 'warning',
+          confirmButtonColor: '#E11D48'
+        }).then(() => {
+          renderFrontEnd();
+          setAdminTab('list');
+        });
       }
-      localStorage.setItem('cached_articles', JSON.stringify(articles));
-      
-      Swal.fire({
-        title: 'Tersimpan (Lokal)!',
-        text: 'Data disimpan lokal pada cache browser Anda.',
-        icon: 'warning',
-        confirmButtonColor: '#E11D48'
-      }).then(() => {
-        renderFrontEnd();
-        setAdminTab('list');
-      });
     }
 
     function editArticle(id) {
@@ -1697,9 +1698,8 @@
       quill.root.innerHTML = art.content;
     }
 
+    // DELETING ARTICLE DIRECTLY FROM CLOUD
     function deleteArticle(id) {
-      const token = sessionStorage.getItem('admin_token');
-      
       Swal.fire({
         title: 'Apakah Anda yakin?',
         text: "Data berita ini akan terhapus selamanya!",
@@ -1717,32 +1717,32 @@
             didOpen: () => { Swal.showLoading(); }
           });
 
-          // BYPASS DIRECT REST CLOUD DELETE
-          const isCustomDB = FIREBASE_DB_URL && !FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
-          if (isCustomDB && !id.startsWith('local-')) {
-            try {
-              const response = await fetch(`${FIREBASE_DB_URL}articles/${id}.json`, {
-                method: 'DELETE'
-              });
-              await fetch(`${FIREBASE_DB_URL}comments/${id}.json`, { method: 'DELETE' });
+          const dbUrl = getDbUrl();
+          try {
+            const response = await fetch(`${dbUrl}articles/${id}.json`, {
+              method: 'DELETE'
+            });
+            await fetch(`${dbUrl}comments/${id}.json`, { method: 'DELETE' });
 
-              if (response.ok) {
-                Swal.fire('Terhapus (Cloud)!', 'Berita berhasil dihapus langsung dari Firebase Cloud Anda.', 'success');
-                fetchArticles();
-                return;
-              }
-            } catch (err) {
-              console.warn("Direct delete failed, falling back to local action...", err);
+            if (response.ok) {
+              Swal.fire('Terhapus (Cloud)!', 'Berita berhasil dihapus langsung dari Firebase Cloud Anda.', 'success');
+              fetchArticles();
+              return;
+            } else {
+              throw new Error("HTTP Status " + response.status);
             }
-          }
-
-          // Fallback delete lokal
-          articles = articles.filter(art => art.id !== id);
-          localStorage.setItem('cached_articles', JSON.stringify(articles));
-          setTimeout(() => {
-            Swal.fire('Terhapus!', 'Berita telah didelete dari cache lokal.', 'success');
+          } catch (err) {
+            console.error("Direct delete failed", err);
+            articles = articles.filter(art => art.id !== id);
+            localStorage.setItem('cached_articles', JSON.stringify(articles));
+            Swal.fire({
+              title: 'Terhapus secara Lokal!',
+              text: 'Koneksi gagal (' + err.message + '), data dihapus dari memori browser lokal.',
+              icon: 'info',
+              confirmButtonColor: '#E11D48'
+            });
             renderAdminList();
-          }, 600);
+          }
         }
       });
     }
