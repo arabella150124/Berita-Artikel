@@ -9,11 +9,12 @@
   <meta name="theme-color" content="#0F172A">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlBvcnRhbCBCZXJpdGEgTW9kZXJuIiwKICAic2hvcnRfbmFtZSIICJCZXJpdGFOZXdzIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3UkEiLAogICJ0aGVtZV9jb2xvciI6ICIjMEYxNzJBIgp9">
+  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlBvcnRhbCBCZXJpdGEgTW9kZXJuIiwKICAic2hvcnRfbmFtZSI6ICJCZXJpdGFOZXdzIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3UkEiLAogICJ0aGVtZV9jb2xvciI6ICIjMEYxNzJBIgp9">
 
+  <!-- Premium News Editorial Fonts (Roboto for Headings & Open Sans for UI/Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -34,8 +35,8 @@
       theme: {
         extend: {
           fontFamily: {
-            serif: ['Lora', 'serif'],
-            sans: ['Inter', 'sans-serif'],
+            serif: ['Roboto', 'sans-serif'],
+            sans: ['Open Sans', 'sans-serif'],
           },
           colors: {
             navy: {
@@ -54,10 +55,10 @@
   </script>
   <style>
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Open Sans', sans-serif;
     }
     h1, h2, h3, .news-title {
-      font-family: 'Lora', serif;
+      font-family: 'Roboto', sans-serif;
     }
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -88,6 +89,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 antialiased">
 
+  <!-- Offline Fallback Notice Banner -->
   <div id="offline-banner" class="hidden bg-amber-500 text-slate-950 px-4 py-2.5 text-center text-sm font-semibold flex items-center justify-center space-x-2 transition-all duration-300 no-print">
     <i class="fas fa-wifi-slash animate-bounce"></i>
     <span>Mode Demo Aktif: Menggunakan database internal memori browser Anda karena server cloud luring.</span>
@@ -96,15 +98,16 @@
   <!-- ==================== FRONT-END VIEW ==================== -->
   <div id="front-end-view" class="min-h-screen flex flex-col">
     
-    <header class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-slate-900 dark:text-white shadow-sm sticky top-0 z-40 no-print border-b border-slate-100 dark:border-slate-800 transition-all duration-300">
+    <!-- Top Header -->
+    <header class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm sticky top-0 z-40 no-print border-b border-slate-100 dark:border-slate-800">
       <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
         <!-- Hamburger & Logo -->
         <div class="flex items-center space-x-4">
           <button id="btn-menu" class="text-2xl focus:outline-none hover:text-red-600 transition" onclick="toggleCategoryDrawer()"><i class="fas fa-bars"></i></button>
-          <span class="text-2xl font-black tracking-tighter flex items-center cursor-pointer font-serif" onclick="filterByCategory('Semua')">
+          <span class="text-2xl font-black tracking-tighter flex items-center cursor-pointer" onclick="filterByCategory('Semua')">
             SARJANA
-            <span class="bg-red-600 text-white text-[11px] px-2 py-0.5 rounded font-black ml-1.5 uppercase tracking-wide font-sans">NEWS</span>
-            <span class="text-[11px] text-blue-600 font-bold ml-0.5 font-sans">.com</span>
+            <span class="bg-red-600 text-white text-[11px] px-2 py-0.5 rounded font-black ml-1.5 uppercase tracking-wide">NEWS</span>
+            <span class="text-[11px] text-blue-600 font-bold ml-0.5">.com</span>
           </span>
         </div>
         
@@ -131,7 +134,8 @@
         </div>
       </div>
 
-      <div class="bg-[#0f2a68] dark:bg-slate-950 overflow-x-auto no-scrollbar py-3 shadow-inner">
+      <!-- Categories Navigation Bar - Blue Background -->
+      <div class="bg-[#0f2a68] dark:bg-slate-950 overflow-x-auto no-scrollbar py-3">
         <div id="dynamic-category-nav" class="max-w-7xl mx-auto px-4 flex space-x-6 text-xs font-extrabold whitespace-nowrap text-white/95">
           <!-- Dynamically populated categories -->
         </div>
@@ -146,6 +150,7 @@
       </div>
     </header>
 
+    <!-- Breaking News Ticker -->
     <section class="bg-slate-950 text-white py-2.5 px-4 text-xs flex items-center no-print">
       <div class="max-w-7xl mx-auto w-full flex items-center font-sans">
         <div class="bg-red-600 text-white px-2.5 py-1 rounded font-black uppercase tracking-wider flex items-center space-x-1 shrink-0 animate-pulse text-[10px]">
@@ -160,7 +165,8 @@
       </div>
     </section>
 
-    <main class="max-w-7xl mx-auto w-full flex-grow py-6 px-4">
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto w-full flex-grow py-6 px-4 font-sans">
       <div class="lg:grid lg:grid-cols-12 lg:gap-8">
         
         <!-- KOLOM UTAMA (KIRI) -->
@@ -168,18 +174,17 @@
           
           <!-- Hero Banner Section -->
           <section id="hero-section" class="no-print">
-            <div class="relative rounded-3xl overflow-hidden aspect-[16/10] md:aspect-[16/9] lg:aspect-[16/9.5] shadow-xl group cursor-pointer border border-slate-150/10 dark:border-slate-800 transition duration-300" id="hero-click-area">
+            <div class="relative rounded-2xl overflow-hidden aspect-[16/10] md:aspect-[16/9] lg:aspect-[16/9.5] shadow-lg group cursor-pointer border border-slate-100 dark:border-slate-800" id="hero-click-area">
               <img id="hero-image" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80" alt="Headline News" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-              <!-- Dual-tone Gradient Overlay for Max Text Contrast -->
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-slate-900/10 flex flex-col justify-end p-8">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent flex flex-col justify-end p-6">
                 <span id="hero-badge" class="bg-red-600 text-white text-[11px] font-black px-2.5 py-1 rounded w-max mb-3 uppercase tracking-wider font-sans">NASIONAL</span>
-                <h1 id="hero-title" class="text-white text-xl md:text-3xl lg:text-4xl font-bold leading-tight group-hover:underline font-serif tracking-tight">Memuat Berita Utama...</h1>
-                <p id="hero-desc" class="text-slate-300 text-xs md:text-sm mt-3 line-clamp-2 max-w-2xl font-light leading-relaxed">Mendapatkan data dari server cloud...</p>
-                <p id="hero-meta" class="text-slate-400 text-xs mt-3 font-sans font-medium">-</p>
+                <h1 id="hero-title" class="text-white text-lg md:text-2xl lg:text-3xl font-bold leading-tight group-hover:underline font-serif">Memuat Berita Utama...</h1>
+                <p id="hero-desc" class="text-slate-300 text-xs md:text-sm mt-2 line-clamp-2 max-w-2xl font-light">Mendapatkan data dari server cloud...</p>
+                <p id="hero-meta" class="text-slate-400 text-xs mt-2 font-sans">-</p>
               </div>
             </div>
             <!-- Dot Navigation Indicators -->
-            <div class="flex justify-center space-x-2 mt-4">
+            <div class="flex justify-center space-x-2 mt-3">
               <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
               <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
               <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></span>
@@ -188,18 +193,19 @@
             </div>
           </section>
 
+          <!-- Circular Category Buttons Section -->
           <section class="no-print">
-            <div id="circular-categories-container" class="grid grid-cols-5 gap-3 text-center bg-white dark:bg-slate-900 py-6 px-4 rounded-3xl shadow-sm border border-slate-100/80 dark:border-slate-800">
+            <div id="circular-categories-container" class="grid grid-cols-5 gap-2 text-center bg-white dark:bg-slate-900 py-5 px-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
               <!-- Dynamically populated circular category buttons -->
             </div>
           </section>
 
           <!-- Recent News (White Background Base) -->
-          <section class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100/80 dark:border-slate-800">
+          <section class="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
             <!-- Section Header -->
-            <div class="flex items-center justify-between mb-6 border-b pb-4 border-slate-100 dark:border-slate-800 no-print">
+            <div class="flex items-center justify-between mb-5 border-b pb-4 border-slate-100 dark:border-slate-800 no-print">
               <h2 id="recent-title" class="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center font-sans">
-                <span class="w-1.5 h-5 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA TERBARU
+                <span class="w-1 h-5 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA TERBARU
               </h2>
               <button onclick="filterByCategory('Semua')" class="text-blue-600 hover:text-red-600 font-extrabold text-xs uppercase flex items-center space-x-1 transition font-sans">
                 <span>LIHAT SEMUA</span> <i class="fas fa-chevron-right text-[9px]"></i>
@@ -207,7 +213,7 @@
             </div>
 
             <!-- News Container Grid -->
-            <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 no-print">
+            <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5 no-print">
               <div class="col-span-full text-center py-12">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-2 border-red-600 border-t-transparent mb-3"></div>
                 <p class="text-sm text-slate-500 font-sans">Menghubungkan langsung ke cloud database...</p>
@@ -222,34 +228,35 @@
 
         </div>
 
+        <!-- SIDEBAR (KANAN) -->
         <aside class="hidden lg:block lg:col-span-4 space-y-6 no-print">
           
           <!-- Sync & Cloud Status -->
-          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100/80 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm space-y-4">
             <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center font-sans">
-              <span class="w-1.5 h-4 bg-blue-600 mr-2.5 inline-block rounded-full"></span>STATUS KEPENDUDUKAN DATA
+              <span class="w-1 h-4 bg-blue-600 mr-2.5 inline-block rounded-full"></span>STATUS KEPENDUDUKAN DATA
             </h3>
-            <div class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700">
+            <div class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
               <span class="flex h-3 w-3 relative">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
               </span>
               <div class="flex-1">
-                <p id="cloud-status-text" class="text-xs font-extrabold text-slate-700 dark:text-slate-300 font-sans">Mode Pratinjau Aktif</p>
-                <p class="text-[10px] text-slate-400 font-sans font-medium">Read: Firebase RTDB / Write: GAS Tokenized</p>
+                <p id="cloud-status-text" class="text-xs font-bold text-slate-700 dark:text-slate-300 font-sans">Mode Pratinjau Aktif</p>
+                <p class="text-[10px] text-slate-400 font-sans">Read: Firebase RTDB / Write: GAS Tokenized</p>
               </div>
             </div>
           </div>
 
           <!-- Popular / Trending Widget -->
-          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100/80 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm space-y-4">
             <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center font-sans">
-              <span class="w-1.5 h-4 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA POPULER
+              <span class="w-1 h-4 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA POPULER
             </h3>
             
             <div class="space-y-4 divide-y divide-slate-100 dark:divide-slate-800">
-              <div class="flex items-start space-x-3.5 pt-4 first:pt-0">
-                <span class="text-3xl font-black text-slate-200 dark:text-slate-700 italic leading-none font-sans">01</span>
+              <div class="flex items-start space-x-3 pt-3 first:pt-0">
+                <span class="text-3xl font-black text-slate-300 dark:text-slate-700 italic font-serif leading-none font-black">01</span>
                 <div>
                   <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 hover:text-red-600 transition leading-snug cursor-pointer line-clamp-2 font-serif" onclick="filterByCategory('Politik')">
                     Persiapan Pilkada Serentak Diperketat di Seluruh Wilayah Utama
@@ -257,8 +264,8 @@
                   <p class="text-[10px] text-slate-400 mt-1 font-sans">15.2k pembaca</p>
                 </div>
               </div>
-              <div class="flex items-start space-x-3.5 pt-4">
-                <span class="text-3xl font-black text-slate-200 dark:text-slate-700 italic leading-none font-sans">02</span>
+              <div class="flex items-start space-x-3 pt-3">
+                <span class="text-3xl font-black text-slate-300 dark:text-slate-700 italic font-serif leading-none font-black">02</span>
                 <div>
                   <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 hover:text-red-600 transition leading-snug cursor-pointer line-clamp-2 font-serif" onclick="filterByCategory('Teknologi')">
                     AI Generatif Terkini Mulai Diterapkan pada Industri Berita Nasional
@@ -270,12 +277,12 @@
           </div>
 
           <!-- Newsletter Banner Widget -->
-          <div class="bg-gradient-to-br from-[#0f2a68] to-slate-900 rounded-3xl p-6 text-white border border-slate-800 shadow-xl space-y-4">
-            <h4 class="text-sm font-bold font-serif text-white/95">Ikuti Terus Update Terbaru</h4>
-            <p class="text-xs text-white/70 font-light leading-relaxed">Dapatkan rangkuman buletin berita terhangat harian langsung ke email Anda gratis.</p>
+          <div class="bg-gradient-to-br from-[#0f2a68] to-slate-900 rounded-2xl p-5 text-white border border-slate-800 shadow-sm space-y-3">
+            <h4 class="text-sm font-bold font-serif">Ikuti Terus Update Terbaru</h4>
+            <p class="text-xs text-white/70 font-light font-sans">Dapatkan rangkuman buletin berita terhangat harian langsung ke email Anda gratis.</p>
             <div class="space-y-2 pt-1">
-              <input type="email" placeholder="Alamat Email Anda" class="w-full text-xs text-slate-950 px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 font-medium">
-              <button class="w-full text-xs font-bold bg-red-600 hover:bg-red-700 py-2.5 rounded-xl transition shadow-md uppercase tracking-wider" onclick="showToast('Terima kasih telah berlangganan!')">Langganan Sekarang</button>
+              <input type="email" placeholder="Alamat Email Anda" class="w-full text-xs text-slate-950 px-3.5 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium font-sans">
+              <button class="w-full text-xs font-bold bg-red-600 hover:bg-red-700 py-2 rounded-lg transition font-sans" onclick="showToast('Terima kasih telah berlangganan!')">Langganan Sekarang</button>
             </div>
           </div>
 
@@ -296,7 +303,7 @@
 
   <!-- ==================== LOGIN VIEW ==================== -->
   <div id="login-view" class="hidden min-h-screen flex items-center justify-center px-4 bg-slate-950">
-    <div class="bg-slate-900 p-8 rounded-3xl w-full max-w-sm border border-slate-800 shadow-2xl space-y-6">
+    <div class="bg-slate-900 p-8 rounded-2xl w-full max-w-sm border border-slate-800 shadow-2xl space-y-6">
       <div class="text-center space-y-2">
         <span class="text-2xl font-black text-white font-serif">SARJANA<span class="text-red-600 font-sans">NEWS</span></span>
         <p class="text-xs text-slate-400 font-sans">Verifikasi Kredensial Serverless Admin</p>
@@ -304,15 +311,15 @@
       <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5 font-sans">Username</label>
-          <input type="text" id="login-username" required class="w-full bg-slate-800 text-white rounded-xl px-4 py-2.5 text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+          <input type="text" id="login-username" required class="w-full bg-slate-800 text-white rounded-lg px-3.5 py-2 text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600 font-sans">
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5 font-sans">Password</label>
-          <input type="password" id="login-password" required class="w-full bg-slate-800 text-white rounded-xl px-4 py-2.5 text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+          <input type="password" id="login-password" required class="w-full bg-slate-800 text-white rounded-lg px-3.5 py-2 text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600 font-sans">
         </div>
-        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase tracking-wider shadow-lg">Otorisasi Masuk</button>
+        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg transition text-xs uppercase tracking-wider font-sans">Otorisasi Masuk</button>
       </form>
-      <button onclick="showFrontEndView()" class="w-full text-slate-400 hover:text-white text-[11px] font-semibold text-center mt-2 flex items-center justify-center space-x-1.5 transition">
+      <button onclick="showFrontEndView()" class="w-full text-slate-400 hover:text-white text-[11px] font-semibold text-center mt-2 flex items-center justify-center space-x-1.5 transition font-sans">
         <i class="fas fa-arrow-left text-[11px]"></i> <span>Kembali ke Portal Berita</span>
       </button>
     </div>
@@ -326,24 +333,24 @@
     
     <aside id="admin-sidebar" class="fixed md:sticky top-0 left-0 h-screen w-64 bg-slate-900 text-white p-5 flex flex-col justify-between shrink-0 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-800">
       <div class="space-y-6">
-        <div class="text-xl font-black tracking-tight font-serif flex items-center justify-between">
+        <div class="text-lg font-black tracking-tight flex items-center justify-between">
           <span>DASHBOARD<span class="text-red-600 font-sans">.</span></span>
           <button class="md:hidden text-lg focus:outline-none text-slate-400 hover:text-white" onclick="toggleAdminSidebar()"><i class="fas fa-times"></i></button>
         </div>
         <nav class="space-y-1.5">
-          <button onclick="setAdminTab('list')" class="w-full text-left py-3 px-4 rounded-xl flex items-center space-x-3.5 text-slate-300 hover:bg-slate-800 hover:text-white admin-nav-tab text-xs font-bold transition" id="tab-list">
+          <button onclick="setAdminTab('list')" class="w-full text-left py-2.5 px-3.5 rounded-lg flex items-center space-x-3.5 text-slate-300 hover:bg-slate-800 hover:text-white admin-nav-tab text-xs font-bold transition" id="tab-list">
             <i class="fas fa-newspaper w-4"></i><span>Kelola Berita</span>
           </button>
-          <button onclick="setAdminTab('add')" class="w-full text-left py-3 px-4 rounded-xl flex items-center space-x-3.5 text-slate-300 hover:bg-slate-800 hover:text-white admin-nav-tab text-xs font-bold transition" id="tab-add">
+          <button onclick="setAdminTab('add')" class="w-full text-left py-2.5 px-3.5 rounded-lg flex items-center space-x-3.5 text-slate-300 hover:bg-slate-800 hover:text-white admin-nav-tab text-xs font-bold transition" id="tab-add">
             <i class="fas fa-edit w-4"></i><span>Tulis Berita Baru</span>
           </button>
-          <button onclick="setAdminTab('settings')" class="w-full text-left py-3 px-4 rounded-xl flex items-center space-x-3.5 text-slate-300 hover:bg-slate-800 hover:text-white admin-nav-tab text-xs font-bold transition" id="tab-settings">
+          <button onclick="setAdminTab('settings')" class="w-full text-left py-2.5 px-3.5 rounded-lg flex items-center space-x-3.5 text-slate-300 hover:bg-slate-800 hover:text-white admin-nav-tab text-xs font-bold transition" id="tab-settings">
             <i class="fas fa-sliders-h w-4"></i><span>Pengaturan Portal</span>
           </button>
         </nav>
       </div>
       <div>
-        <button onclick="handleLogout()" class="w-full text-left py-3 px-4 rounded-xl flex items-center space-x-3.5 text-red-400 hover:bg-red-950/40 hover:text-red-300 text-xs font-bold transition">
+        <button onclick="handleLogout()" class="w-full text-left py-2.5 px-3.5 rounded-lg flex items-center space-x-3.5 text-red-400 hover:bg-red-950/40 hover:text-red-300 text-xs font-bold transition">
           <i class="fas fa-sign-out-alt w-4"></i><span>Keluar Admin</span>
         </button>
       </div>
@@ -352,43 +359,43 @@
     <!-- Admin Content Area -->
     <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
       <!-- Admin Top Nav -->
-      <header class="bg-white dark:bg-slate-900 shadow-sm px-6 py-4.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+      <header class="bg-white dark:bg-slate-900 shadow-sm px-6 py-4 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
         <div class="flex items-center space-x-4">
           <button class="md:hidden text-xl focus:outline-none hover:text-red-600" onclick="toggleAdminSidebar()"><i class="fas fa-bars"></i></button>
-          <h2 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 tracking-tight" id="admin-page-title">Sistem Penulisan Berita</h2>
+          <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight font-sans" id="admin-page-title">Sistem Penulisan Berita</h2>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3.5 py-1.5 rounded-full font-extrabold font-sans">Role: Administrator</span>
+          <span class="text-xs bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3.5 py-1.5 rounded-full font-bold font-sans">Role: Administrator</span>
         </div>
       </header>
 
       <!-- Tab Content: List/Manage Articles -->
-      <main id="admin-tab-list" class="p-6 flex-grow space-y-6">
+      <main id="admin-tab-list" class="p-6 flex-grow space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h3 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider font-sans">Arsip Berita Aktif</h3>
+          <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-sans">Arsip Berita Aktif</h3>
           <div class="flex items-center space-x-3">
-            <button onclick="triggerPrintReport()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center space-x-2 shadow-md transition">
+            <button onclick="triggerPrintReport()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-2 shadow-md transition font-sans">
               <i class="fas fa-print"></i><span>Cetak Laporan PDF</span>
             </button>
-            <button onclick="setAdminTab('add')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center space-x-2 shadow-md transition">
+            <button onclick="setAdminTab('add')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-2 shadow-md transition font-sans">
               <i class="fas fa-plus"></i><span>Tulis Berita</span>
             </button>
           </div>
         </div>
 
         <!-- Admin Table & Responsive Cards -->
-        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden" id="print-area">
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow border border-slate-200 dark:border-slate-800 overflow-hidden" id="print-area">
           <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between no-print">
-            <input type="text" id="admin-search" oninput="handleAdminSearch(this.value)" placeholder="Cari arsip berita berdasarkan judul..." class="w-full max-w-sm text-xs bg-slate-50 dark:bg-slate-800 dark:text-white border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-red-600">
+            <input type="text" id="admin-search" oninput="handleAdminSearch(this.value)" placeholder="Cari arsip berita berdasarkan judul..." class="w-full max-w-sm text-xs bg-slate-50 dark:bg-slate-800 dark:text-white border border-slate-300 dark:border-slate-700 rounded-lg px-3.5 py-2 focus:outline-none focus:ring-1 focus:ring-red-600 font-sans">
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-              <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-extrabold uppercase border-b border-slate-200 dark:border-slate-800">
+              <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold uppercase border-b border-slate-200 dark:border-slate-800">
                 <tr>
-                  <th class="px-6 py-4 font-sans">Berita</th>
-                  <th class="px-6 py-4 font-sans">Kategori</th>
-                  <th class="px-6 py-4 font-sans">Tanggal Dibuat</th>
-                  <th class="px-6 py-4 text-right no-print font-sans">Aksi</th>
+                  <th class="px-5 py-3.5 font-sans">Berita</th>
+                  <th class="px-5 py-3.5 font-sans">Kategori</th>
+                  <th class="px-5 py-3.5 font-sans">Tanggal Dibuat</th>
+                  <th class="px-5 py-3.5 text-right no-print font-sans">Aksi</th>
                 </tr>
               </thead>
               <tbody id="admin-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
@@ -401,63 +408,63 @@
 
       <!-- Tab Content: Add/Edit Article -->
       <main id="admin-tab-add" class="p-6 flex-grow hidden max-w-4xl">
-        <form id="form-article" onsubmit="handleSaveArticle(event)" class="space-y-5 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <form id="form-article" onsubmit="handleSaveArticle(event)" class="space-y-4 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow">
           <input type="hidden" id="article-id">
           
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 font-sans">
             <div>
-              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Judul Berita</label>
-              <input type="text" id="article-title" required class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl px-4 py-2.5 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600 font-serif">
+              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase">Judul Berita</label>
+              <input type="text" id="article-title" required class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg px-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600 font-serif">
             </div>
             <div>
-              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Kategori</label>
-              <select id="article-category" class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl px-4 py-2.5 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase">Kategori</label>
+              <select id="article-category" class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg px-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
                 <!-- Dynamically loaded -->
               </select>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end font-sans">
             <div class="md:col-span-8">
-              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">URL Gambar Utama (Atau Upload Gambar)</label>
-              <input type="url" id="article-image" required placeholder="https://images.unsplash.com/photo-..." class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl px-4 py-2.5 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase">URL Gambar Utama (Atau Upload Gambar)</label>
+              <input type="url" id="article-image" required placeholder="https://images.unsplash.com/photo-..." class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg px-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
             </div>
             <div class="md:col-span-4">
               <!-- Image Compressor & Uploader File Input -->
               <input type="file" id="local-image-uploader" accept="image/*" class="hidden" onchange="compressLocalImage(this)">
-              <button type="button" onclick="document.getElementById('local-image-uploader').click()" class="w-full text-xs font-bold bg-slate-200 dark:bg-slate-800 hover:bg-red-600 hover:text-white text-slate-700 dark:text-slate-300 py-3 rounded-xl border border-slate-300 dark:border-slate-700 transition flex items-center justify-center space-x-2">
+              <button type="button" onclick="document.getElementById('local-image-uploader').click()" class="w-full text-xs font-bold bg-slate-200 dark:bg-slate-800 hover:bg-red-600 hover:text-white text-slate-700 dark:text-slate-300 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 transition flex items-center justify-center space-x-2">
                 <i class="fas fa-cloud-upload-alt"></i>
                 <span>Upload Gambar</span>
               </button>
             </div>
           </div>
 
-          <div class="flex items-center space-x-2.5 py-1">
+          <div class="flex items-center space-x-2.5 py-1 font-sans">
             <input type="checkbox" id="article-featured" class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-600">
             <label for="article-featured" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Set sebagai Berita Utama (Hero Banner)</label>
           </div>
 
           <div>
-            <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Isi Konten Berita</label>
-            <div id="editor-container" class="bg-white dark:bg-slate-800 dark:text-white min-h-[220px] rounded-xl overflow-hidden border border-slate-250 dark:border-slate-700"></div>
+            <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase font-sans">Isi Konten Berita</label>
+            <div id="editor-container" class="bg-white dark:bg-slate-800 dark:text-white min-h-[220px] rounded-lg overflow-hidden"></div>
           </div>
 
-          <div class="flex justify-end space-x-3 pt-5 border-t border-slate-200 dark:border-slate-800">
-            <button type="button" onclick="setAdminTab('list')" class="px-5 py-2.5 text-xs font-bold border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition">Batal</button>
-            <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition">Simpan Berita</button>
+          <div class="flex justify-end space-x-3 pt-5 border-t border-slate-200 dark:border-slate-800 font-sans">
+            <button type="button" onclick="setAdminTab('list')" class="px-4 py-2 text-xs font-bold border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Batal</button>
+            <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg transition">Simpan Berita</button>
           </div>
         </form>
       </main>
 
       <!-- Tab Content: Portal Settings -->
       <main id="admin-tab-settings" class="p-6 flex-grow hidden max-w-4xl space-y-6">
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow space-y-6 font-sans">
           <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider font-serif">Pengaturan Portal & Breaking News</h3>
           
           <!-- Running Text Ticker Config -->
           <div class="space-y-3">
             <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Mode Teks Berjalan (Breaking News)</label>
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div class="flex items-center space-x-4">
               <label class="flex items-center space-x-2 text-xs font-semibold cursor-pointer text-slate-700 dark:text-slate-300">
                 <input type="radio" name="ticker-mode" value="auto" checked onchange="toggleTickerMode('auto')" class="w-4 h-4 text-red-600 focus:ring-red-600">
                 <span>Otomatis (Judul Berita Terbaru)</span>
@@ -468,7 +475,7 @@
               </label>
             </div>
             <div id="custom-ticker-container" class="hidden pt-1.5">
-              <input type="text" id="custom-ticker-input" placeholder="Tulis pengumuman penting berjalan di sini..." class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl px-4 py-2.5 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+              <input type="text" id="custom-ticker-input" placeholder="Tulis pengumuman penting berjalan di sini..." class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg px-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
             </div>
           </div>
 
@@ -476,8 +483,8 @@
           <div class="space-y-4 pt-5 border-t border-slate-100 dark:border-slate-800">
             <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Kelola Kategori Menu Navigasi</label>
             <div class="flex items-center space-x-3">
-              <input type="text" id="new-category-input" placeholder="Kategori baru (Olahraga, Gaya Hidup)..." class="w-full max-w-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl px-4 py-2.5 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
-              <button type="button" onclick="addNewCategory()" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition shrink-0">Tambah</button>
+              <input type="text" id="new-category-input" placeholder="Masukkan nama kategori baru (cth: Olahraga)..." class="w-full max-w-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg px-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+              <button type="button" onclick="addNewCategory()" class="px-4.5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg transition shrink-0">Tambah</button>
             </div>
             
             <p class="text-[10px] text-slate-400 font-medium">Klik tanda silang (x) di sebelah nama kategori untuk menghapusnya:</p>
@@ -487,7 +494,7 @@
           </div>
 
           <div class="flex justify-end pt-5 border-t border-slate-200 dark:border-slate-800">
-            <button type="button" onclick="savePortalSettings()" class="px-6 py-3 text-xs font-bold text-white bg-[#0f2a68] hover:bg-blue-800 rounded-xl transition uppercase tracking-wider">Simpan Semua Pengaturan</button>
+            <button type="button" onclick="savePortalSettings()" class="px-5 py-2 text-xs font-bold text-white bg-[#0f2a68] hover:bg-blue-800 rounded-lg transition uppercase tracking-wider">Simpan Semua Pengaturan</button>
           </div>
         </div>
       </main>
@@ -499,7 +506,7 @@
 
   <!-- ==================== LOGIKA WEB APPLICATION ==================== -->
   <script>
-    // ATURAN MANDATORI: GAS_URL URL Jembatan App Script
+    // ATURAN MANDATORI: GAS_URL URL Jembatan App Script (Default Placeholder)
     const GAS_URL = "https://script.google.com/macros/s/AKfycbygIRhquWYEmMIHBiuRqmz5E9UAaXRlxf8Y4mRrToQu-mM5Z6BnYUWeZjZUP1Z6fwLz/exec";
 
     // REST API Endpoint URL Firebase Realtime Database
@@ -535,7 +542,6 @@
         }
       });
       
-      // Override Quill default Image handler to use base64 compressor natively
       const toolbar = quill.getModule('toolbar');
       toolbar.addHandler('image', () => {
         const input = document.createElement('input');
@@ -557,13 +563,11 @@
 
       checkAdminSessionState();
 
-      // Fetch dynamic settings and categories first, then fetch articles
       fetchPortalSettings().then(() => {
         fetchArticles();
       });
     });
 
-    // PWA Service Worker Register Basic
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdmaXRjaCcsIGZ1bmN0aW9uKGV2ZW50KSB7fSk7')
@@ -571,7 +575,6 @@
       });
     }
 
-    // Toast/Alert Utilities using SweetAlert2
     function showToast(title, icon = 'success') {
       const Toast = Swal.mixin({
         toast: true,
@@ -587,7 +590,6 @@
       Toast.fire({ icon, title });
     }
 
-    // Toggle Dark Mode
     function toggleDarkMode() {
       isDarkMode = !isDarkMode;
       document.documentElement.classList.toggle('dark', isDarkMode);
@@ -616,8 +618,11 @@
       const authBtnText = document.getElementById('auth-btn-text');
       const authHeaderBtn = document.getElementById('auth-header-btn');
       
-      if (token) {
+      if (token && token !== 'local-demo-token') {
         authBtnText.innerText = "Admin Panel";
+        authHeaderBtn.onclick = () => showAdminDashboard();
+      } else if (token === 'local-demo-token') {
+        authBtnText.innerText = "Demo Panel (Lokal)";
         authHeaderBtn.onclick = () => showAdminDashboard();
       } else {
         authBtnText.innerText = "Login Admin";
@@ -670,7 +675,6 @@
       }
     }
 
-    // DYNAMIC SETTINGS & CATEGORIES ENGINE
     async function fetchPortalSettings() {
       const isPlaceholderDB = FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb") || FIREBASE_DB_URL.includes("placeholder");
 
@@ -684,7 +688,7 @@
 
       try {
         const response = await fetch(`${FIREBASE_DB_URL}settings/config.json`);
-        if (!response.ok) throw new Error("Settings fetch bypass error");
+        if (!response.ok) throw new Error("Settings direct fetch error");
         const data = await response.json();
         
         if (data) {
@@ -696,14 +700,12 @@
             tickerSettings = data.ticker;
             localStorage.setItem('portal_ticker', JSON.stringify(tickerSettings));
           }
-        } else {
-          loadFallbackSettings();
         }
         isOfflineMode = false;
         document.getElementById('offline-banner').classList.add('hidden');
         document.getElementById('cloud-status-text').innerText = "Direct REST Bypass Aktif";
       } catch (e) {
-        console.warn("REST settings bypass failed, loading cache...", e);
+        console.warn("Direct settings fetch error, loading cache...", e);
         isOfflineMode = true;
         document.getElementById('offline-banner').classList.remove('hidden');
         document.getElementById('cloud-status-text').innerText = "Mode Demo Luring";
@@ -786,7 +788,6 @@
       select.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
     }
 
-    // Fetch Articles - BYPASS OPTIMIZATION (GET Direct from Firebase REST API)
     async function fetchArticles() {
       const isPlaceholderDB = FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb") || FIREBASE_DB_URL.includes("placeholder");
       
@@ -803,7 +804,7 @@
         const response = await fetch(`${FIREBASE_DB_URL}articles.json`, { signal: controller.signal });
         clearTimeout(timeoutId);
         
-        if (!response.ok) throw new Error("Firebase response bypass error");
+        if (!response.ok) throw new Error("Firebase direct response error");
         const data = await response.json();
         
         articles = [];
@@ -812,13 +813,6 @@
             id: key,
             ...data[key]
           })).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-        }
-
-        // Auto render fallback dummy articles if cloud database is empty
-        if (articles.length === 0) {
-          console.log("Database cloud kosong, menginjeksikan data dummy...");
-          loadFallbackArticles();
-          return;
         }
         
         localStorage.setItem('cached_articles', JSON.stringify(articles));
@@ -831,7 +825,6 @@
       }
     }
 
-    // Load Fallback Articles (Mock Database exactly matches image_14101b.jpg layouts)
     function loadFallbackArticles() {
       const cached = localStorage.getItem('cached_articles');
       if (cached && JSON.parse(cached).length > 0) {
@@ -864,24 +857,6 @@
             featured: false,
             content: "<p>Ekosistem startup tanah air kembali menunjukkan daya tarik kuat bagi investor internasional dengan diperolehnya pendanaan seri B terbaru.</p>",
             createdAt: "2025-07-19T06:00:00.000Z"
-          },
-          {
-            id: "mock-4",
-            title: "G7 Sepakat Perkuat Sanksi terhadap Pelanggaran HAM Internasional",
-            category: "Dunia",
-            image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
-            featured: false,
-            content: "<p>Negara-negara anggota G7 menyepakati pengetatan pengawasan guna menjaga perdamaian dan ketertiban hukum internasional.</p>",
-            createdAt: "2025-07-19T05:55:00.000Z"
-          },
-          {
-            id: "mock-5",
-            title: "5 Destinasi Wisata Alam Tersembunyi Terbaik Tahun Ini",
-            category: "Nasional",
-            image: "https://images.unsplash.com/photo-1472214222541-d510753a4707?auto=format&fit=crop&w=800&q=80",
-            featured: false,
-            content: "<p>Menemukan berbagai keindahan destinasi wisata alam lokal yang belum banyak dieksplorasi di daerah pelosok tanah air.</p>",
-            createdAt: "2025-07-19T05:50:00.000Z"
           }
         ];
         localStorage.setItem('cached_articles', JSON.stringify(articles));
@@ -890,7 +865,6 @@
       updateBreakingNews();
     }
 
-    // Dynamic Front-End Rendering (White Background Clean Layout)
     function renderFrontEnd() {
       const grid = document.getElementById('news-grid');
       const filtered = articles.filter(art => {
@@ -900,7 +874,6 @@
         return matchesCategory && matchesSearch;
       });
 
-      // Render Hero Slider
       const featuredArticle = articles.find(art => art.featured) || articles[0];
       const heroSection = document.getElementById('hero-section');
       if (featuredArticle && selectedCategory === 'Semua' && searchQuery === '') {
@@ -918,12 +891,11 @@
         heroSection.classList.add('hidden');
       }
 
-      // Render News Grid List (Thumbnails left with exactly matching icon overlays)
       if (filtered.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full text-center py-12 text-slate-500 font-sans">
+          <div class="col-span-full text-center py-12 text-slate-500">
             <i class="far fa-newspaper text-4xl mb-3"></i>
-            <p class="text-sm">Tidak ada berita yang ditemukan.</p>
+            <p class="text-sm font-sans">Tidak ada berita yang ditemukan.</p>
           </div>`;
         return;
       }
@@ -933,7 +905,7 @@
         const dateString = new Date(art.createdAt).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
         return `
           <div class="flex items-center space-x-4 py-4 border-b border-slate-100 dark:border-slate-850 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 p-2.5 rounded-2xl transition duration-200 bg-white dark:bg-slate-900 shadow-sm md:shadow-none border border-slate-100 md:border-0 dark:border-slate-800">
-            <div class="relative w-36 h-24 shrink-0 rounded-2xl overflow-hidden shadow-sm cursor-pointer" onclick="openArticle('${art.id}')">
+            <div class="relative w-36 h-24 shrink-0 rounded-xl overflow-hidden shadow-sm cursor-pointer" onclick="openArticle('${art.id}')">
               <img src="${art.image}" alt="${art.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=SarjanaNews'">
               <span class="absolute bottom-1.5 left-1.5 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider font-sans">${art.category}</span>
               <div class="absolute bottom-1.5 right-1.5 bg-white/95 text-slate-900 w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
@@ -957,7 +929,6 @@
       }).join('');
     }
 
-    // Update Breaking News Ticker (Support Custom Text and Automatic News Title Mode)
     function updateBreakingNews() {
       const tickerTextElement = document.getElementById('ticker-text');
       if (!tickerTextElement) return;
@@ -974,7 +945,6 @@
       }
     }
 
-    // Filter Category
     function filterByCategory(category) {
       selectedCategory = category;
       searchQuery = '';
@@ -982,34 +952,31 @@
       document.getElementById('news-detail-container').classList.add('hidden');
       document.getElementById('news-grid').classList.remove('hidden');
       
-      // Update horizontal nav class activation
       renderCategoryNav();
 
       document.getElementById('recent-title').innerHTML = `<span class="w-1 h-5 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA ${category.toUpperCase()}`;
       renderFrontEnd();
     }
 
-    // Filter Search
     function handleSearch(query) {
       searchQuery = query;
       renderFrontEnd();
     }
 
-    // Bookmarks UI
     function openBookmarksView() {
       document.getElementById('news-detail-container').classList.add('hidden');
       document.getElementById('hero-section').classList.add('hidden');
       document.getElementById('news-grid').classList.remove('hidden');
-      document.getElementById('recent-title').innerHTML = `<span class="w-1.5 h-5 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA DISIMPAN`;
+      document.getElementById('recent-title').innerHTML = `<span class="w-1 h-5 bg-red-600 mr-2.5 inline-block rounded-full"></span>BERITA DISIMPAN`;
       
       const grid = document.getElementById('news-grid');
       const bookmarkedArticles = articles.filter(art => bookmarks.includes(art.id));
 
       if (bookmarkedArticles.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full text-center py-12 text-slate-500 font-sans">
+          <div class="col-span-full text-center py-12 text-slate-500">
             <i class="far fa-bookmark text-4xl mb-3"></i>
-            <p class="text-sm">Tidak ada berita yang Anda simpan.</p>
+            <p class="text-sm font-sans">Tidak ada berita yang Anda simpan.</p>
           </div>`;
         return;
       }
@@ -1018,7 +985,7 @@
         const dateString = new Date(art.createdAt).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
         return `
           <div class="flex items-center space-x-4 py-4 border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 p-2.5 rounded-2xl transition">
-            <div class="relative w-36 h-24 shrink-0 rounded-2xl overflow-hidden shadow-sm cursor-pointer" onclick="openArticle('${art.id}')">
+            <div class="relative w-36 h-24 shrink-0 rounded-xl overflow-hidden shadow-sm cursor-pointer" onclick="openArticle('${art.id}')">
               <img src="${art.image}" alt="${art.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=SarjanaNews'">
               <span class="absolute bottom-1.5 left-1.5 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded uppercase font-sans">${art.category}</span>
               <div class="absolute bottom-1.5 right-1.5 bg-white/95 text-slate-900 w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
@@ -1058,7 +1025,6 @@
       }
     }
 
-    // Open Article & Dynamic SEO Schema JSON-LD Injector
     function openArticle(id) {
       const art = articles.find(a => a.id === id);
       if (!art) return;
@@ -1072,7 +1038,6 @@
       const isBookmarked = bookmarks.includes(art.id);
       const dateString = new Date(art.createdAt).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'});
 
-      // Inject Schema JSON-LD for SEO Google Crawler
       const seoSchemaElement = document.getElementById('seo-schema');
       const articleUrl = `${window.location.origin}${window.location.pathname}?id=${art.id}`;
       const schemaData = {
@@ -1090,7 +1055,7 @@
       seoSchemaElement.text = JSON.stringify(schemaData);
 
       detailContainer.innerHTML = `
-        <div class="space-y-6">
+        <div class="space-y-5">
           <button onclick="showFrontEndView()" class="text-slate-500 dark:text-slate-400 hover:text-red-600 text-xs font-bold flex items-center space-x-1.5 mb-3 transition">
             <i class="fas fa-arrow-left"></i> <span>Kembali ke depan</span>
           </button>
@@ -1100,14 +1065,14 @@
             <span class="text-slate-400 text-xs font-medium font-sans">${dateString} WIB</span>
           </div>
 
-          <h1 class="text-xl md:text-3xl font-bold text-slate-900 dark:text-white leading-tight font-serif tracking-tight">${art.title}</h1>
+          <h1 class="text-xl md:text-3xl font-bold text-slate-900 dark:text-white leading-tight font-serif">${art.title}</h1>
           
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-y border-slate-100 dark:border-slate-800 py-3.5 text-slate-500 text-xs gap-4">
-            <span class="font-sans">Oleh: <b class="text-slate-800 dark:text-slate-200">Redaksi SarjanaNews</b></span>
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-y border-slate-100 dark:border-slate-800 py-3.5 text-slate-500 text-xs gap-4 font-sans">
+            <span>Oleh: <b class="text-slate-800 dark:text-slate-200">Redaksi SarjanaNews</b></span>
             
             <!-- Social Share Bar & Bookmark -->
             <div class="flex items-center space-x-4">
-              <span class="font-bold uppercase text-[10px] text-slate-400 font-sans">Bagikan:</span>
+              <span class="font-bold uppercase text-[10px] text-slate-400">Bagikan:</span>
               <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(art.title + ' - ' + articleUrl)}" target="_blank" class="text-emerald-500 hover:text-emerald-600 text-sm" title="Bagikan ke WhatsApp"><i class="fab fa-whatsapp"></i></a>
               <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}" target="_blank" class="text-blue-600 hover:text-blue-700 text-sm" title="Bagikan ke Facebook"><i class="fab fa-facebook"></i></a>
               <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(art.title)}&url=${encodeURIComponent(articleUrl)}" target="_blank" class="text-sky-400 hover:text-sky-500 text-sm" title="Bagikan ke X"><i class="fab fa-twitter"></i></a>
@@ -1121,28 +1086,28 @@
             </div>
           </div>
 
-          <img src="${art.image}" alt="${art.title}" class="w-full max-h-[450px] object-cover rounded-3xl shadow-sm border border-slate-150/10 dark:border-slate-800" onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=SarjanaNews'">
+          <img src="${art.image}" alt="${art.title}" class="w-full max-h-[450px] object-cover rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800" onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=SarjanaNews'">
           
           <div class="prose dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 text-sm md:text-base leading-relaxed space-y-5 pt-3 font-sans">
             ${art.content}
           </div>
 
-          <!-- PREMIUM COMMENTS SYSTEM (REST Fetch & Tokenized Write) -->
+          <!-- PREMIUM COMMENTS SYSTEM -->
           <div class="border-t border-slate-200 dark:border-slate-800 pt-8 mt-12 space-y-6">
-            <h3 class="text-base font-black text-slate-900 dark:text-white flex items-center"><i class="far fa-comments mr-2 text-red-600 text-lg"></i>DISKUSI PEMBACA</h3>
+            <h3 class="text-base font-black text-slate-900 dark:text-white flex items-center font-sans"><i class="far fa-comments mr-2 text-red-600 text-lg"></i>DISKUSI PEMBACA</h3>
             
             <!-- Comment Submission Form -->
-            <form onsubmit="handleSendComment(event, '${art.id}')" class="space-y-3 bg-slate-50 dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input type="text" id="comment-author" required placeholder="Nama Anda" class="w-full text-xs bg-white dark:bg-slate-800 dark:text-white px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-red-600 font-sans">
-                <span class="text-[10px] text-slate-400 flex items-center font-sans">Komentar akan disaring otomatis oleh filter keamanan sistem.</span>
+            <form onsubmit="handleSendComment(event, '${art.id}')" class="space-y-3 bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-sans">
+                <input type="text" id="comment-author" required placeholder="Nama Anda" class="w-full text-xs bg-white dark:bg-slate-800 dark:text-white px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-600">
+                <span class="text-[10px] text-slate-400 flex items-center">Komentar akan disaring otomatis oleh filter keamanan sistem.</span>
               </div>
-              <textarea id="comment-message" required rows="3" placeholder="Tulis komentar konstruktif Anda di sini..." class="w-full text-xs bg-white dark:bg-slate-800 dark:text-white px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-red-600 font-sans"></textarea>
-              <button type="submit" class="bg-[#0f2a68] hover:bg-blue-800 text-white font-extrabold text-[11px] px-5 py-2.5 rounded-xl transition uppercase tracking-wider font-sans">Kirim Komentar</button>
+              <textarea id="comment-message" required rows="3" placeholder="Tulis komentar konstruktif Anda di sini..." class="w-full text-xs bg-white dark:bg-slate-800 dark:text-white px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-600 font-sans"></textarea>
+              <button type="submit" class="bg-[#0f2a68] hover:bg-blue-800 text-white font-extrabold text-[11px] px-5 py-2 rounded-lg transition uppercase font-sans">Kirim Komentar</button>
             </form>
 
             <!-- Comments List Box -->
-            <div id="comments-render-box" class="space-y-4 pt-3">
+            <div id="comments-render-box" class="space-y-4 pt-3 font-sans">
               <!-- Loaded dynamically -->
             </div>
           </div>
@@ -1152,7 +1117,6 @@
       fetchComments(art.id);
     }
 
-    // Image Compressor Function
     function compressLocalImage(inputElement) {
       const file = inputElement.files[0];
       if (!file) return;
@@ -1174,7 +1138,6 @@
       });
     }
 
-    // Canvas Compression Core
     function compressFileToBase64(file, callback) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -1210,7 +1173,6 @@
       };
     }
 
-    // Comments Direct Retrieval Engine
     async function fetchComments(articleId) {
       const renderBox = document.getElementById('comments-render-box');
       try {
@@ -1228,21 +1190,21 @@
           const initials = c.name.substring(0, 2).toUpperCase();
           const dateString = new Date(c.createdAt).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'});
           return `
-            <div class="flex items-start space-x-3 text-xs bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800">
-              <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[#0f2a68] dark:text-white shrink-0 font-sans">${initials}</div>
+            <div class="flex items-start space-x-3 text-xs bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
+              <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[#0f2a68] dark:text-white shrink-0">${initials}</div>
               <div class="space-y-1">
                 <div class="flex items-center space-x-2">
-                  <span class="font-bold text-slate-800 dark:text-slate-100 font-sans">${c.name}</span>
-                  <span class="text-[9px] text-slate-400 font-medium font-sans">${dateString}</span>
+                  <span class="font-bold text-slate-800 dark:text-slate-100">${c.name}</span>
+                  <span class="text-[9px] text-slate-400 font-medium">${dateString}</span>
                 </div>
-                <p class="text-slate-600 dark:text-slate-300 font-light leading-relaxed font-sans">${c.comment}</p>
+                <p class="text-slate-600 dark:text-slate-300 font-light">${c.comment}</p>
               </div>
             </div>
           `;
         }).join('');
       } catch (err) {
         console.error("Gagal mendapatkan komentar:", err);
-        renderBox.innerHTML = `<p class="text-xs text-red-500 font-sans">Gagal memuat diskusi komentar.</p>`;
+        renderBox.innerHTML = `<p class="text-xs text-red-500">Gagal memuat diskusi komentar.</p>`;
       }
     }
 
@@ -1324,9 +1286,17 @@
       if (isOfflineMode || isPlaceholderGAS) {
         if (user.toLowerCase() === 'admin' && pass === 'sarjanasoft') {
           sessionStorage.setItem('admin_token', 'local-demo-token');
-          showToast('Masuk Mode Demo Berhasil!');
-          checkAdminSessionState();
-          showAdminDashboard();
+          
+          Swal.fire({
+            icon: 'warning',
+            title: 'Masuk Mode Demo (Lokal)',
+            html: `Otorisasi Cloud gagal terhubung ke Google Apps Script Anda.<br><br>
+            Sistem secara aman mengalihkan Anda ke <b>Sesi Penyimpanan Lokal</b> agar Anda dapat menguji fungsionalitas panel admin di peramban ini.`,
+            confirmButtonColor: '#E11D48'
+          }).then(() => {
+            checkAdminSessionState();
+            showAdminDashboard();
+          });
         } else {
           Swal.fire({
             title: 'Akses Ditolak!',
@@ -1356,9 +1326,17 @@
       } catch (error) {
         if (user.toLowerCase() === 'admin' && pass === 'sarjanasoft') {
           sessionStorage.setItem('admin_token', 'local-demo-token');
-          showToast('Masuk dengan Sesi Lokal!');
-          checkAdminSessionState();
-          showAdminDashboard();
+          
+          Swal.fire({
+            icon: 'warning',
+            title: 'Masuk Mode Demo (Lokal)',
+            html: `Terjadi kendala CORS/Koneksi saat menghubungi Apps Script Anda.<br><br>
+            Sistem secara aman mengalihkan Anda ke <b>Sesi Penyimpanan Lokal</b> agar Anda tetap dapat menguji fungsionalitas.`,
+            confirmButtonColor: '#E11D48'
+          }).then(() => {
+            checkAdminSessionState();
+            showAdminDashboard();
+          });
         } else {
           Swal.fire('Error', 'Koneksi gagal atau kredensial salah!', 'error');
         }
@@ -1403,7 +1381,6 @@
       tabAddBtn.classList.remove('bg-slate-800', 'text-white');
       tabSettingsBtn.classList.remove('bg-slate-800', 'text-white');
 
-      // Auto close drawer if switched in mobile view
       const sidebar = document.getElementById('admin-sidebar');
       if (sidebar.classList.contains('translate-x-0') && window.innerWidth < 768) {
         toggleAdminSidebar();
@@ -1433,20 +1410,17 @@
       }
     }
 
-    // Render Portal Settings Tab View
     function renderPortalSettingsView() {
-      // Set Mode Radio checked state
       const isAuto = tickerSettings.mode === 'auto';
       document.querySelector(`input[name="ticker-mode"][value="${tickerSettings.mode}"]`).checked = true;
       toggleTickerMode(tickerSettings.mode);
 
       document.getElementById('custom-ticker-input').value = tickerSettings.text || '';
 
-      // Render Categories items with delete buttons
       const listContainer = document.getElementById('admin-categories-list');
       if (listContainer) {
         listContainer.innerHTML = categories.map(cat => `
-          <span class="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-850 dark:text-slate-300 text-slate-800 text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700">
+          <span class="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-850 dark:text-slate-300 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
             <span>${cat}</span>
             <button type="button" onclick="deleteCategory('${cat}')" class="text-red-500 hover:text-red-700 focus:outline-none"><i class="fas fa-times-circle"></i></button>
           </span>
@@ -1489,7 +1463,6 @@
       showToast('Kategori dihapus');
     }
 
-    // Save configuration settings to Cloud/Local
     async function savePortalSettings() {
       const token = sessionStorage.getItem('admin_token');
       const tickerMode = document.querySelector('input[name="ticker-mode"]:checked').value;
@@ -1512,7 +1485,7 @@
       if (isOfflineMode || token === 'local-demo-token') {
         setTimeout(() => {
           Swal.fire({
-            title: 'Berhasil!',
+            title: 'Tersimpan (Lokal)!',
             text: 'Pengaturan tersimpan sementara di memori browser lokal.',
             icon: 'success',
             confirmButtonColor: '#E11D48'
@@ -1559,7 +1532,6 @@
       }
     }
 
-    // Render database lists inside admin dashboard table
     function renderAdminList() {
       const tbody = document.getElementById('admin-table-body');
       const filtered = articles.filter(art => art.title.toLowerCase().includes(adminSearchQuery.toLowerCase()));
@@ -1567,7 +1539,7 @@
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="4" class="text-center py-10 text-slate-500 text-xs font-sans">
+            <td colspan="4" class="text-center py-10 text-slate-500 text-xs">
               Tidak ada berita yang dapat ditampilkan dalam daftar arsip.
             </td>
           </tr>`;
@@ -1578,22 +1550,22 @@
         const dateString = new Date(art.createdAt).toLocaleDateString('id-ID', {day: 'numeric', month: 'numeric', year: 'numeric'});
         return `
           <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-            <td class="px-6 py-4">
-              <div class="flex items-center space-x-3.5">
-                <img src="${art.image}" class="w-10 h-10 object-cover rounded-xl shadow-sm" onerror="this.src='https://placehold.co/100x100/0f172a/ffffff?text=Imgs'">
+            <td class="px-5 py-4">
+              <div class="flex items-center space-x-3">
+                <img src="${art.image}" class="w-10 h-10 object-cover rounded-lg shadow-sm" onerror="this.src='https://placehold.co/100x100/0f172a/ffffff?text=Imgs'">
                 <div>
                   <div class="text-xs font-bold text-slate-800 dark:text-white line-clamp-1 font-serif">${art.title}</div>
                   <div class="text-[10px] text-slate-400 mt-0.5 font-sans">${art.featured ? '⭐ Berita Utama' : 'Berita Biasa'}</div>
                 </div>
               </div>
             </td>
-            <td class="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase font-sans">
+            <td class="px-5 py-4 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase font-sans">
               ${art.category}
             </td>
-            <td class="px-6 py-4 text-xs text-slate-500 font-medium font-sans">
+            <td class="px-5 py-4 text-xs text-slate-500 font-medium font-sans">
               ${dateString}
             </td>
-            <td class="px-6 py-4 text-right space-x-3 text-xs no-print font-sans">
+            <td class="px-5 py-4 text-right space-x-3 text-xs no-print font-sans">
               <button onclick="editArticle('${art.id}')" class="text-blue-600 dark:text-blue-400 hover:underline"><i class="fas fa-edit"></i> Edit</button>
               <button onclick="deleteArticle('${art.id}')" class="text-red-600 hover:underline"><i class="fas fa-trash-alt"></i> Hapus</button>
             </td>
@@ -1616,7 +1588,6 @@
       quill.root.innerHTML = '';
     }
 
-    // Save Article handler (Requires Secure token validated on GAS)
     async function handleSaveArticle(event) {
       event.preventDefault();
 
@@ -1660,14 +1631,16 @@
         setTimeout(() => {
           Swal.fire({
             title: 'Tersimpan (Lokal)!',
-            text: 'Data disimpan lokal pada cache browser Anda.',
+            html: `Data berita disimpan di memori browser Anda.<br><br>
+            <b>Ingin menyimpan langsung ke cloud?</b><br>
+            Silakan pastikan deployment Google Apps Script Anda telah aktif dan Anda tidak masuk menggunakan sesi lokal.`,
             icon: 'success',
             confirmButtonColor: '#E11D48'
           }).then(() => {
             renderFrontEnd();
             setAdminTab('list');
           });
-        }, 700);
+        }, 750);
         return;
       }
 
@@ -1683,8 +1656,8 @@
 
         if (result && result.status === 'success') {
           Swal.fire({
-            title: 'Berhasil!',
-            text: 'Berita Anda sukses diterbitkan secara real-time!',
+            title: 'Berhasil Terbit!',
+            text: 'Berita Anda sukses diterbitkan secara real-time ke Firebase Cloud!',
             icon: 'success',
             confirmButtonColor: '#E11D48'
           }).then(() => {
@@ -1720,7 +1693,6 @@
       quill.root.innerHTML = art.content;
     }
 
-    // Delete Article (Requires Token Verification)
     function deleteArticle(id) {
       const token = sessionStorage.getItem('admin_token');
       
@@ -1776,7 +1748,6 @@
       });
     }
 
-    // Print to PDF function
     function triggerPrintReport() {
       const printHeader = `
         <div id="print-header" class="text-center py-6 border-b-2 border-slate-900 mb-6 flex flex-col justify-center items-center">
