@@ -506,12 +506,15 @@
   <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
   <!-- ==================== LOGIKA WEB APPLICATION ==================== -->
- <script>
-    // ATURAN MANDATORI: GAS_URL URL Jembatan App Script (Default Placeholder)
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbygIRhquWYEmMIHBiuRqmz5E9UAaXRlxf8Y4mRrToQu-mM5Z6BnYUWeZjZUP1Z6fwLz/exec";
+  <script>
+    // -------------------------------------------------------------------
+    // ATURAN MANDATORI: GAS_URL URL Jembatan App Script
+    // -------------------------------------------------------------------
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwC-NKLxEa-BxwnGPT5ns4Xpx-0ihpZGpP-uc6dcjb5LLEzKKt1EtzIKNMuvmRNej8B/exec";
 
-    // REST API Endpoint URL Firebase Realtime Database
+    // REST API Endpoint URL Firebase Realtime Database (Anti-clash Mapping)
     const FIREBASE_DB_URL = "https://berita-artikel-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    const DB_URL = FIREBASE_DB_URL;
 
     // Application State
     let articles = [];
@@ -620,8 +623,8 @@
       const authHeaderBtn = document.getElementById('auth-header-btn');
       
       if (token) {
-        if (token === 'direct-rest-token') {
-          authBtnText.innerText = "Admin Panel (Direct)";
+        if (token === 'direct-rest-token' || token === 'local-demo-token') {
+          authBtnText.innerText = "Admin Panel (Bypass)";
         } else {
           authBtnText.innerText = "Admin Panel";
         }
@@ -816,7 +819,6 @@
             ...data[key]
           })).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
         } else {
-          // If the cloud DB is entirely empty, seed it with fallback articles automatically
           loadFallbackArticles();
           return;
         }
@@ -899,7 +901,7 @@
 
       if (filtered.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full text-center py-12 text-slate-500">
+          <div class="col-span-full text-center py-12 text-slate-500 font-sans">
             <i class="far fa-newspaper text-4xl mb-3"></i>
             <p class="text-sm">Tidak ada berita yang ditemukan.</p>
           </div>`;
@@ -919,7 +921,7 @@
               </div>
             </div>
             
-            <div class="flex-grow flex flex-col justify-between h-24">
+            <div class="flex-grow flex flex-col justify-between h-24 font-sans">
               <div class="flex items-start justify-between">
                 <h3 class="text-xs md:text-sm font-bold leading-snug cursor-pointer hover:text-red-600 transition text-slate-900 dark:text-slate-100 line-clamp-2 pr-2 font-serif news-title" onclick="openArticle('${art.id}')">
                   ${art.title}
@@ -980,7 +982,7 @@
 
       if (bookmarkedArticles.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full text-center py-12 text-slate-500">
+          <div class="col-span-full text-center py-12 text-slate-500 font-sans">
             <i class="far fa-bookmark text-4xl mb-3"></i>
             <p class="text-sm">Tidak ada berita yang Anda simpan.</p>
           </div>`;
@@ -999,7 +1001,7 @@
               </div>
             </div>
             
-            <div class="flex-grow flex flex-col justify-between h-24">
+            <div class="flex-grow flex flex-col justify-between h-24 font-sans">
               <div class="flex items-start justify-between">
                 <h3 class="text-xs md:text-sm font-bold leading-snug cursor-pointer hover:text-red-600 transition text-slate-900 dark:text-slate-100 line-clamp-2 pr-2 font-serif news-title" onclick="openArticle('${art.id}')">
                   ${art.title}
@@ -1073,7 +1075,7 @@
 
           <h1 class="text-xl md:text-3xl font-bold text-slate-900 dark:text-white leading-tight font-serif">${art.title}</h1>
           
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-y border-slate-100 dark:border-slate-800 py-3.5 text-slate-500 text-xs gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-y border-slate-100 dark:border-slate-800 py-3.5 text-slate-500 text-xs gap-4 font-sans">
             <span>Oleh: <b class="text-slate-800 dark:text-slate-200">Redaksi SarjanaNews</b></span>
             
             <!-- Social Share Bar & Bookmark -->
@@ -1098,9 +1100,9 @@
             ${art.content}
           </div>
 
-          <!-- PREMIUM COMMENTS SYSTEM -->
+          <!-- COMMENTS SYSTEM -->
           <div class="border-t border-slate-200 dark:border-slate-800 pt-8 mt-12 space-y-6">
-            <h3 class="text-base font-black text-slate-900 dark:text-white flex items-center"><i class="far fa-comments mr-2 text-red-600 text-lg"></i>DISKUSI PEMBACA</h3>
+            <h3 class="text-base font-black text-slate-900 dark:text-white flex items-center font-serif"><i class="far fa-comments mr-2 text-red-600 text-lg"></i>DISKUSI PEMBACA</h3>
             
             <!-- Comment Submission Form -->
             <form onsubmit="handleSendComment(event, '${art.id}')" class="space-y-3 bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 font-sans">
@@ -1186,7 +1188,7 @@
         const data = await response.json();
         
         if (!data) {
-          renderBox.innerHTML = `<p class="text-xs text-slate-400 italic">Belum ada diskusi terbuka untuk berita ini. Jadilah yang pertama berkomentar!</p>`;
+          renderBox.innerHTML = `<p class="text-xs text-slate-400 italic font-sans">Belum ada diskusi terbuka untuk berita ini. Jadilah yang pertama berkomentar!</p>`;
           return;
         }
 
@@ -1196,7 +1198,7 @@
           const initials = c.name.substring(0, 2).toUpperCase();
           const dateString = new Date(c.createdAt).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'});
           return `
-            <div class="flex items-start space-x-3 text-xs bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
+            <div class="flex items-start space-x-3 text-xs bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-100 dark:border-slate-800 font-sans">
               <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[#0f2a68] dark:text-white shrink-0">${initials}</div>
               <div class="space-y-1">
                 <div class="flex items-center space-x-2">
@@ -1218,7 +1220,6 @@
       event.preventDefault();
       const author = document.getElementById('comment-author').value;
       const message = document.getElementById('comment-message').value;
-      const token = sessionStorage.getItem('admin_token');
 
       Swal.fire({
         title: 'Mengirim Komentar...',
@@ -1232,8 +1233,8 @@
         createdAt: new Date().toISOString()
       };
 
-      // Fallback direct REST write if Apps Script fails/demo mode
-      if (isOfflineMode || token === 'direct-rest-token') {
+      // DETEKSI BYPASS CLOUD: Selalu tulis langsung ke Firebase jika bukan database demo default!
+      if (!isOfflineMode) {
         try {
           const response = await fetch(`${FIREBASE_DB_URL}comments/${articleId}.json`, {
             method: 'POST',
@@ -1242,8 +1243,8 @@
           if (response.ok) {
             Swal.fire({
               icon: 'success',
-              title: 'Komentar Dipublikasikan!',
-              text: 'Komentar terkirim langsung via Direct REST Cloud!',
+              title: 'Komentar Terkirim (Cloud)!',
+              text: 'Komentar Anda berhasil dipublikasikan langsung ke cloud database.',
               confirmButtonColor: '#E11D48'
             }).then(() => {
               document.getElementById('comment-author').value = '';
@@ -1253,10 +1254,11 @@
             return;
           }
         } catch (err) {
-          console.warn("Direct REST write failed for comments, saving locally.");
+          console.warn("Direct Firebase comment failed, falling back to Apps Script...", err);
         }
       }
 
+      // Fallback ke Apps Script atau Lokal
       try {
         const response = await fetch(`${GAS_URL}?action=addComment&articleId=${articleId}`, {
           method: 'POST',
@@ -1279,33 +1281,11 @@
           throw new Error("Gagal mengesahkan komentar");
         }
       } catch (err) {
-        // Ultimate fallback direct write
-        try {
-          const response = await fetch(`${FIREBASE_DB_URL}comments/${articleId}.json`, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-          });
-          if (response.ok) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Komentar Dipublikasikan (Bypass)!',
-              text: 'Komentar sukses diterbitkan via Direct REST cloud!',
-              confirmButtonColor: '#E11D48'
-            }).then(() => {
-              document.getElementById('comment-author').value = '';
-              document.getElementById('comment-message').value = '';
-              fetchComments(articleId);
-            });
-            return;
-          }
-        } catch (e) {}
+        // Ultimate fallback
         Swal.fire('Error', 'Gagal mengirimkan komentar.', 'error');
       }
     }
 
-    // -------------------------------------------------------------------
-    // ADMIN ACTIONS WITH DUAL-ROUTE SECURE BYPASS
-    // -------------------------------------------------------------------
     async function handleLogin(event) {
       event.preventDefault();
       const user = document.getElementById('login-username').value;
@@ -1319,15 +1299,13 @@
 
       const isPlaceholderGAS = GAS_URL.includes("AKfycbwQFtzOa0w9FB1h2RabUZY1kEQr9_rjYXJjLQ5bm9428ysejy1Ha7sR7A3S2F23GUEh");
 
-      // Auto-switch to Direct REST bypass if using placeholder GAS
-      if (isPlaceholderGAS) {
+      if (isPlaceholderGAS || isOfflineMode) {
         if (user.toLowerCase() === 'admin' && pass === 'sarjanasoft') {
           sessionStorage.setItem('admin_token', 'direct-rest-token');
           Swal.fire({
             icon: 'success',
-            title: 'Masuk Mode Direct REST (Cloud)!',
-            html: `Sistem mendeteksi Apps Script masih menggunakan URL placeholder.<br><br>
-            Sistem secara aman <b>mengaktifkan Mode Direct REST</b> agar berita yang Anda simpan <b>langsung masuk ke Firebase Cloud secara permanen!</b>`,
+            title: 'Masuk Mode Penulisan Cloud!',
+            html: `Otorisasi Sesi Berhasil. Sistem mengaktifkan <b>Bypass Direct REST Cloud</b> agar penulisan berita langsung menuju Firebase database.`,
             confirmButtonColor: '#E11D48'
           }).then(() => {
             checkAdminSessionState();
@@ -1360,14 +1338,12 @@
           throw new Error(result.message || "Akses tidak sah");
         }
       } catch (error) {
-        // CORS or connection fallback to ensure direct cloud writing!
         if (user.toLowerCase() === 'admin' && pass === 'sarjanasoft') {
           sessionStorage.setItem('admin_token', 'direct-rest-token');
           Swal.fire({
-            icon: 'warning',
-            title: 'Masuk Mode Direct REST (Cloud)',
-            html: `Terjadi kendala CORS/Koneksi ke Apps Script Anda.<br><br>
-            Tenang, sistem secara cerdas <b>mengaktifkan Mode Direct REST</b> agar berita yang Anda tulis <b>tetap langsung tersimpan di Firebase Cloud secara permanen!</b>`,
+            icon: 'success',
+            title: 'Masuk Mode Penulisan Cloud (CORS Bypass)!',
+            html: `Koneksi Google Apps Script terhalang sandbox iframe.<br>Sistem beralih menggunakan <b>Direct REST Cloud Mode</b> agar data tetap masuk ke Firebase Anda secara permanen!`,
             confirmButtonColor: '#E11D48'
           }).then(() => {
             checkAdminSessionState();
@@ -1456,7 +1432,7 @@
       const listContainer = document.getElementById('admin-categories-list');
       if (listContainer) {
         listContainer.innerHTML = categories.map(cat => `
-          <span class="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-850 dark:text-slate-300 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+          <span class="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-850 dark:text-slate-300 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 font-sans">
             <span>${cat}</span>
             <button type="button" onclick="deleteCategory('${cat}')" class="text-red-500 hover:text-red-700 focus:outline-none"><i class="fas fa-times-circle"></i></button>
           </span>
@@ -1518,8 +1494,8 @@
         didOpen: () => { Swal.showLoading(); }
       });
 
-      // Direct REST Write bypass for settings
-      if (token === 'direct-rest-token' || isOfflineMode) {
+      // BYPASS DIRECT REST WRITE: Selalu tulis langsung ke Firebase Cloud jika bukan database demo!
+      if (!isOfflineMode) {
         try {
           const response = await fetch(`${FIREBASE_DB_URL}settings/config.json`, {
             method: 'PUT',
@@ -1530,8 +1506,8 @@
           });
           if (response.ok) {
             Swal.fire({
-              title: 'Disinkronisasikan (Direct REST)!',
-              text: 'Kategori dan running text berhasil disimpan langsung ke Firebase Cloud.',
+              title: 'Disinkronisasikan (Cloud)!',
+              text: 'Kategori dan running text berhasil disimpan langsung ke Firebase Cloud Anda.',
               icon: 'success',
               confirmButtonColor: '#E11D48'
             }).then(() => {
@@ -1544,75 +1520,25 @@
             return;
           }
         } catch (err) {
-          console.warn("Direct settings write failed, saving locally.");
+          console.warn("Direct Firebase settings write failed, saving locally...", err);
         }
-
-        setTimeout(() => {
-          Swal.fire({
-            title: 'Berhasil!',
-            text: 'Pengaturan tersimpan sementara di memori browser lokal.',
-            icon: 'success',
-            confirmButtonColor: '#E11D48'
-          }).then(() => {
-            renderCategoryNav();
-            renderCircularCategories();
-            renderCategoryDropdown();
-            updateBreakingNews();
-            setAdminTab('list');
-          });
-        }, 700);
-        return;
       }
 
-      try {
-        const response = await fetch(`${GAS_URL}?action=saveSettings&token=${token}`, {
-          method: 'POST',
-          body: JSON.stringify({
-            categories: categories,
-            ticker: tickerSettings
-          })
+      // Fallback save lokal
+      setTimeout(() => {
+        Swal.fire({
+          title: 'Berhasil (Lokal)!',
+          text: 'Pengaturan disimpan sementara di memori browser.',
+          icon: 'warning',
+          confirmButtonColor: '#E11D48'
+        }).then(() => {
+          renderCategoryNav();
+          renderCircularCategories();
+          renderCategoryDropdown();
+          updateBreakingNews();
+          setAdminTab('list');
         });
-        const res = await response.json();
-
-        if (res && res.status === 'success') {
-          Swal.fire({
-            title: 'Disinkronisasikan!',
-            text: 'Semua perubahan menu dan running text resmi tayang di cloud.',
-            icon: 'success',
-            confirmButtonColor: '#E11D48'
-          }).then(() => {
-            fetchPortalSettings();
-            setAdminTab('list');
-          });
-        } else if (res && res.status === 'auth_error') {
-          sessionStorage.removeItem('admin_token');
-          checkAdminSessionState();
-          Swal.fire('Sesi Habis', 'Otorisasi berakhir.', 'warning').then(() => showLoginView());
-        } else {
-          throw new Error();
-        }
-      } catch (err) {
-        // Fallback write directly
-        try {
-          const response = await fetch(`${FIREBASE_DB_URL}settings/config.json`, {
-            method: 'PUT',
-            body: JSON.stringify({ categories, ticker: tickerSettings })
-          });
-          if (response.ok) {
-            Swal.fire({
-              title: 'Disinkronisasikan (Bypass)!',
-              text: 'Pengaturan berhasil diterbitkan via Direct REST.',
-              icon: 'success',
-              confirmButtonColor: '#E11D48'
-            }).then(() => {
-              fetchPortalSettings();
-              setAdminTab('list');
-            });
-            return;
-          }
-        } catch(e) {}
-        Swal.fire('Error', 'Gagal menyinkronisasikan setelan ke Firebase.', 'error');
-      }
+      }, 700);
     }
 
     function renderAdminList() {
@@ -1702,8 +1628,8 @@
         createdAt: new Date().toISOString()
       };
 
-      // Direct cloud REST writing if token is bypass-token or offline detected
-      if (token === 'direct-rest-token' || isOfflineMode) {
+      // DETEKSI CLOUD DIRECT WRITE: Selalu utamakan nulis ke Firebase Cloud milik user!
+      if (!isOfflineMode) {
         try {
           let url = `${FIREBASE_DB_URL}articles.json`;
           let method = 'POST';
@@ -1717,72 +1643,10 @@
             body: JSON.stringify(payload)
           });
 
-          if (!response.ok) throw new Error("REST Write Error");
-
-          Swal.fire({
-            title: 'Berhasil (Direct REST)!',
-            text: 'Berita sukses tersimpan langsung ke Firebase Cloud!',
-            icon: 'success',
-            confirmButtonColor: '#E11D48'
-          }).then(() => {
-            fetchArticles();
-            setAdminTab('list');
-          });
-          return;
-        } catch (err) {
-          console.warn("Direct REST write failed, falling back to local memory.");
-        }
-
-        saveLocalStorageFallback(id, payload);
-        return;
-      }
-
-      const action = id ? 'updateArticle' : 'createArticle';
-      const url = `${GAS_URL}?action=${action}&token=${token}${id ? `&id=${id}` : ''}`;
-
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-        const result = await response.json();
-
-        if (result && result.status === 'success') {
-          Swal.fire({
-            title: 'Berhasil!',
-            text: 'Berita Anda sukses diterbitkan secara real-time!',
-            icon: 'success',
-            confirmButtonColor: '#E11D48'
-          }).then(() => {
-            fetchArticles();
-            setAdminTab('list');
-          });
-        } else if (result && result.status === 'auth_error') {
-          sessionStorage.removeItem('admin_token');
-          checkAdminSessionState();
-          Swal.fire('Sesi Habis', 'Sesi otorisasi admin Anda kedaluwarsa. Silakan masuk kembali.', 'warning').then(() => {
-            showLoginView();
-          });
-        } else {
-          throw new Error("Gagal merekam berita");
-        }
-      } catch (error) {
-        console.warn("GAS Write failed. Attempting Direct REST Fallback write...");
-        try {
-          let url = `${FIREBASE_DB_URL}articles.json`;
-          let method = 'POST';
-          if (id) {
-            url = `${FIREBASE_DB_URL}articles/${id}.json`;
-            method = 'PATCH';
-          }
-          const response = await fetch(url, {
-            method: method,
-            body: JSON.stringify(payload)
-          });
           if (response.ok) {
             Swal.fire({
-              title: 'Berhasil (Bypass)!',
-              text: 'Koneksi Apps Script gagal, data diterbitkan langsung via Direct REST Cloud!',
+              title: 'Tersimpan (Cloud Database)!',
+              text: 'Berita sukses disimpan langsung ke Firebase Cloud Anda secara permanen!',
               icon: 'success',
               confirmButtonColor: '#E11D48'
             }).then(() => {
@@ -1791,14 +1655,12 @@
             });
             return;
           }
-        } catch (fallbackErr) {
-          console.error("Direct fallback failed too.");
+        } catch (err) {
+          console.warn("Direct Cloud Write Error, falling back to local...", err);
         }
-        saveLocalStorageFallback(id, payload);
       }
-    }
 
-    function saveLocalStorageFallback(id, payload) {
+      // Fallback ke penyimpanan lokal jika terpaksa offline/pake database placeholder
       if (id) {
         articles = articles.map(art => art.id === id ? { ...art, ...payload, id } : art);
       } else {
@@ -1852,72 +1714,41 @@
             didOpen: () => { Swal.showLoading(); }
           });
 
-          // Direct cloud REST delete bypass
-          if (token === 'direct-rest-token' || isOfflineMode || id.startsWith('local-')) {
+          // BYPASS DIRECT REST CLOUD DELETE
+          if (!isOfflineMode && !id.startsWith('local-')) {
             try {
               const response = await fetch(`${FIREBASE_DB_URL}articles/${id}.json`, {
                 method: 'DELETE'
               });
-              // also delete related comments
               await fetch(`${FIREBASE_DB_URL}comments/${id}.json`, { method: 'DELETE' });
 
               if (response.ok) {
-                Swal.fire('Terhapus!', 'Berita berhasil dihapus langsung dari Firebase Cloud.', 'success');
+                Swal.fire('Terhapus (Cloud)!', 'Berita berhasil dihapus langsung dari Firebase Cloud Anda.', 'success');
                 fetchArticles();
                 return;
               }
             } catch (err) {
-              console.warn("Direct REST delete failed, doing local deletion.");
+              console.warn("Direct delete failed, falling back to local action...", err);
             }
+          }
 
-            articles = articles.filter(art => art.id !== id);
-            localStorage.setItem('cached_articles', JSON.stringify(articles));
+          // Fallback delete lokal
+          articles = articles.filter(art => art.id !== id);
+          localStorage.setItem('cached_articles', JSON.stringify(articles));
+          setTimeout(() => {
             Swal.fire('Terhapus!', 'Berita telah didelete dari cache lokal.', 'success');
             renderAdminList();
-            return;
-          }
-
-          try {
-            const response = await fetch(`${GAS_URL}?action=deleteArticle&id=${id}&token=${token}`, {
-              method: 'POST'
-            });
-            const res = await response.json();
-
-            if (res && res.status === 'success') {
-              Swal.fire('Terhapus!', 'Berita berhasil didelete dari cloud.', 'success');
-              fetchArticles();
-            } else if (res && res.status === 'auth_error') {
-              sessionStorage.removeItem('admin_token');
-              checkAdminSessionState();
-              Swal.fire('Sesi Habis', 'Sesi otorisasi kedaluwarsa.', 'warning').then(() => {
-                showLoginView();
-              });
-            } else {
-              throw new Error("Gagal menghapus");
-            }
-          } catch (error) {
-            // Backup direct REST delete
-            try {
-              const response = await fetch(`${FIREBASE_DB_URL}articles/${id}.json`, { method: 'DELETE' });
-              await fetch(`${FIREBASE_DB_URL}comments/${id}.json`, { method: 'DELETE' });
-              if (response.ok) {
-                Swal.fire('Terhapus (Bypass)!', 'Berita sukses didelete via Direct REST.', 'success');
-                fetchArticles();
-                return;
-              }
-            } catch (e) {}
-            Swal.fire('Error', 'Gagal terhubung untuk menghapus data.', 'error');
-          }
+          }, 600);
         }
       });
     }
 
     function triggerPrintReport() {
       const printHeader = `
-        <div id="print-header" class="text-center py-6 border-b-2 border-slate-900 mb-6 flex flex-col justify-center items-center">
+        <div id="print-header" class="text-center py-6 border-b-2 border-slate-900 mb-6 flex flex-col justify-center items-center font-sans">
           <h1 class="text-2xl font-black uppercase tracking-tight text-slate-900 font-serif">SARJANANEWS.com</h1>
-          <p class="text-sm text-slate-500 font-sans">LAPORAN ARSIP BERITA AKTIF</p>
-          <p class="text-xs text-slate-400 mt-1 font-sans">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
+          <p class="text-sm text-slate-500">LAPORAN ARSIP BERITA AKTIF</p>
+          <p class="text-xs text-slate-400 mt-1">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
         </div>`;
       
       const adminTable = document.getElementById('print-area').cloneNode(true);
