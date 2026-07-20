@@ -510,10 +510,10 @@
     // -------------------------------------------------------------------
     // ATURAN MANDATORI: GAS_URL URL Jembatan App Script
     // -------------------------------------------------------------------
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwC-NKLxEa-BxwnGPT5ns4Xpx-0ihpZGpP-uc6dcjb5LLEzKKt1EtzIKNMuvmRNej8B/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxSdVpN_FVlPbIPxwkEFEtdA3t9nhP36vmJzcHsVPb6EdUbYlCvVFkY9dQZ64VxarJm/exec";
 
     // REST API Endpoint URL Firebase Realtime Database (Anti-clash Mapping)
-    const FIREBASE_DB_URL = "https://berita-artikel-default-rtdb.asia-southeast1.firebasedatabase.app";
+    const FIREBASE_DB_URL = "https://berita-artikel-default-rtdb.asia-southeast1.firebasedatabase.app/";
     const DB_URL = FIREBASE_DB_URL;
 
     // Application State
@@ -1234,7 +1234,8 @@
       };
 
       // DETEKSI BYPASS CLOUD: Selalu tulis langsung ke Firebase jika bukan database demo default!
-      if (!isOfflineMode) {
+      const isCustomDB = FIREBASE_DB_URL && !FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
+      if (isCustomDB) {
         try {
           const response = await fetch(`${FIREBASE_DB_URL}comments/${articleId}.json`, {
             method: 'POST',
@@ -1495,7 +1496,8 @@
       });
 
       // BYPASS DIRECT REST WRITE: Selalu tulis langsung ke Firebase Cloud jika bukan database demo!
-      if (!isOfflineMode) {
+      const isCustomDB = FIREBASE_DB_URL && !FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
+      if (isCustomDB) {
         try {
           const response = await fetch(`${FIREBASE_DB_URL}settings/config.json`, {
             method: 'PUT',
@@ -1629,7 +1631,8 @@
       };
 
       // DETEKSI CLOUD DIRECT WRITE: Selalu utamakan nulis ke Firebase Cloud milik user!
-      if (!isOfflineMode) {
+      const isCustomDB = FIREBASE_DB_URL && !FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
+      if (isCustomDB) {
         try {
           let url = `${FIREBASE_DB_URL}articles.json`;
           let method = 'POST';
@@ -1715,7 +1718,8 @@
           });
 
           // BYPASS DIRECT REST CLOUD DELETE
-          if (!isOfflineMode && !id.startsWith('local-')) {
+          const isCustomDB = FIREBASE_DB_URL && !FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
+          if (isCustomDB && !id.startsWith('local-')) {
             try {
               const response = await fetch(`${FIREBASE_DB_URL}articles/${id}.json`, {
                 method: 'DELETE'
