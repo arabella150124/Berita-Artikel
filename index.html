@@ -495,7 +495,7 @@
     // -------------------------------------------------------------------
     // ATURAN MANDATORI: GAS_URL URL Jembatan App Script
     // -------------------------------------------------------------------
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbw1fVoi6U3y5ec0V8AdVGNAaoS1e6ERDSPD1zmQ5EOEbsEccXDI0v73E4YRLaiqLP12/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbz2eQs12mFispvENxW92dmAR-mZbmm52STt4J603Q3eDh204cJpZvLgo46NrqSaon3N/exec";
 
     // REST API Endpoint URL Firebase Realtime Database
     const FIREBASE_DB_URL = "https://berita-artikel-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -666,6 +666,18 @@
 
     // Fetch Articles - BYPASS OPTIMIZATION (GET Direct from Firebase REST API)
     async function fetchArticles() {
+      // Deteksi jika masih menggunakan URL database contoh bawaan (placeholder)
+      const isPlaceholderDB = FIREBASE_DB_URL.includes("sentral-umkm-default-rtdb");
+      
+      if (isPlaceholderDB) {
+        // Jalankan mode demo secara mulus tanpa menampilkan banner error yang merusak estetika
+        isOfflineMode = true;
+        document.getElementById('offline-banner').classList.add('hidden');
+        document.getElementById('cloud-status-text').innerText = "Mode Pratinjau Aktif";
+        loadFallbackArticles();
+        return;
+      }
+
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout trigger
